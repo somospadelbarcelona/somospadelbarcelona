@@ -332,32 +332,52 @@ function saveMatchResult(matchName, resultado) {
 }
 
 function syncWithFirebase() {
-    if (!window.isFirebaseActive || !window.db) return;
+    if (!window.isFirebaseActive || !window.db) {
+        console.warn("⚠️ Firebase no está activo o la DB no está inicializada.");
+        return;
+    }
 
-    // Indicador visual de conexión (si existe elemento)
+    // Indicador visual de conexión
     const updateStatus = (status) => {
         const indicator = document.getElementById('cloud-status-indicator');
         if (indicator) {
-            indicator.innerHTML = status === 'online'
-                ? '<i class="fas fa-cloud" style="color:#22c55e;"></i> ONLINE'
-                : '<i class="fas fa-cloud-sun" style="color:#f59e0b;"></i> CONNECTING...';
+            if (status === 'online') {
+                indicator.innerHTML = '<i class="fas fa-cloud" style="color:#22c55e;"></i> ONLINE';
+                indicator.style.borderColor = 'rgba(34, 197, 94, 0.4)';
+            } else if (status === 'offline') {
+                indicator.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:#ef4444;"></i> OFFLINE';
+                indicator.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+            } else {
+                indicator.innerHTML = '<i class="fas fa-cloud-sun" style="color:#f59e0b;"></i> CONNECTING...';
+                indicator.style.borderColor = 'rgba(245, 158, 11, 0.4)';
+            }
         }
     };
 
     updateStatus('connecting');
-    console.log("📡 Initializing Cloud Listener...");
+    console.log("📡 Iniciando escucha de Firebase...");
 
+    // 1. Detectar si hay conexión a la infraestructura de Firebase
+    window.db.ref('.info/connected').on('value', (snap) => {
+        if (snap.val() === true) {
+            console.log("🟢 Conexión establecida con el servidor de Firebase.");
+        } else {
+            console.log("🔴 Conexión perdida con el servidor de Firebase.");
+            updateStatus('offline');
+        }
+    });
+
+    // 2. Escuchar cambios en los datos
     window.db.ref('tournament_state').on('value', (snapshot) => {
         const cloudData = snapshot.val();
         updateStatus('online');
 
         if (cloudData) {
-            console.log("☁️ Cloud Update Received!");
-            // IMPORTANTE: Sobrescribir datos locales con los de la nube
+            console.log("☁️ ¡Actualización de la nube recibida!");
             tournamentData = cloudData;
             localStorage.setItem('tournamentData', JSON.stringify(tournamentData));
 
-            // Re-render everything
+            // Re-renderizar todo
             if (typeof renderStandings === 'function') renderStandings();
             if (typeof renderMatches === 'function') renderMatches();
             if (typeof renderBrackets === 'function') renderBrackets();
@@ -365,12 +385,18 @@ function syncWithFirebase() {
             if (typeof updateHeaderStats === 'function') updateHeaderStats();
             if (typeof renderLiveFeed === 'function') renderLiveFeed();
 
-            // If in admin, re-render admin too
             if (typeof initAdmin === 'function') initAdmin();
+        } else {
+            console.warn("⚠️ La ruta 'tournament_state' está vacía en Firebase.");
+            // Si está vacía, subimos los datos actuales por primera vez si somos admin
+            if (window.location.pathname.includes('admin.html')) {
+                console.log("📤 Inicializando base de datos con datos locales...");
+                saveState();
+            }
         }
     }, (error) => {
-        console.error("Firebase Sync Error:", error);
-        updateStatus('error');
+        console.error("❌ Error de sincronización Firebase:", error);
+        updateStatus('offline');
     });
 }
 
