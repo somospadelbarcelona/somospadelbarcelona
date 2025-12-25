@@ -17,6 +17,8 @@
 
     <!-- Deshabilitar DevTools -->
     <script>
+        // F12 enabled for debugging
+        /*
         // Bloquear F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
         document.addEventListener('keydown', function (e) {
             if (e.key === 'F12' ||
@@ -32,6 +34,7 @@
             e.preventDefault();
             return false;
         });
+        */
     </script>
 
 </head>
@@ -55,6 +58,7 @@
             <button class="nav-btn active" data-tab="standings">Clasificación</button>
             <button class="nav-btn" data-tab="matches">Partidos</button>
             <button class="nav-btn" data-tab="playoffs">Eliminatorias</button>
+            <button class="nav-btn" data-tab="stats">Estadísticas</button>
             <button class="nav-btn" data-tab="rules">Normativa</button>
             <a href="admin.html" class="nav-btn" style="text-decoration: none; color: inherit;">Admin</a>
         </nav>
@@ -85,8 +89,8 @@
                     <i class="fas fa-clock"></i>
                 </div>
                 <div class="stat-content">
-                    <div class="stat-value" id="nextMatch">--:--</div>
-                    <div class="stat-label">Próximo Partido</div>
+                    <div class="stat-value" id="nextMatch">0</div>
+                    <div class="stat-label">Partidos Pendientes</div>
                 </div>
             </div>
 
@@ -163,100 +167,270 @@
             </div>
         </section>
 
-        <!-- Rules Tab -->
+        <!-- Rules Tab (Premium Redesign) -->
         <section id="rules-tab" class="tab-content" style="display: none;">
-            <h2 class="category-header"><i class="fas fa-gavel"></i> NORMATIVA DEL TORNEO</h2>
+            <!-- Hero Section for Rules -->
+            <div class="rules-hero">
+                <div class="rules-hero-content">
+                    <h2 class="category-header"><i class="fas fa-book-open"></i> NORMATIVA OFICIAL</h2>
+                    <p class="rules-subtitle">Reglas, Protocolos y Estándares del Torneo</p>
+                </div>
+            </div>
 
-            <div class="rules-grid">
-                <!-- Reglas de Juego -->
-                <div class="rule-card">
-                    <div class="rule-header">
-                        <i class="fas fa-trophy rule-icon"></i>
+            <div class="rules-container-premium">
+                <!-- Card 1: Gameplay -->
+                <div class="rule-card-premium">
+                    <div class="rcp-icon-box">
+                        <i class="fas fa-table-tennis"></i>
                     </div>
-                    <h3 class="rule-title">REGLAS DE JUEGO</h3>
-                    <div class="rule-content">
-                        <div class="rule-item">
-                            <i class="fas fa-check-circle"></i>
-                            <p>Todos los partidos se juegan con <strong>punto de oro</strong>.</p>
-                        </div>
-                        <div class="rule-item">
-                            <i class="fas fa-edit"></i>
-                            <p>Ante cualquier duda, <strong>se repite el punto</strong>.</p>
-                        </div>
-                        <div class="rule-item">
-                            <i class="fas fa-volleyball-ball"></i>
-                            <p>Si pita el final del tiempo, se termina el <strong>juego en curso</strong>.</p>
-                        </div>
+                    <div class="rcp-content">
+                        <h3>SISTEMA DE JUEGO</h3>
+                        <ul class="rcp-list">
+                            <li>
+                                <span class="highlight"><i class="fas fa-coins"></i> PUNTO DE ORO:</span>
+                                <p>Todos los juegos se deciden con punto de oro en 40-40.</p>
+                            </li>
+                            <li>
+                                <span class="highlight"><i class="fas fa-redo"></i> DUDA = REPETICIÓN:</span>
+                                <p>Ante cualquier desacuerdo en una bola, se repite el punto.</p>
+                            </li>
+                            <li>
+                                <span class="highlight"><i class="fas fa-stopwatch"></i> FIN DE TIEMPO:</span>
+                                <p>Si suena la bocina, se termina solo el juego en curso.</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="rcp-bg-number">01</div>
+                </div>
+
+                <!-- Card 2: Protocol -->
+                <div class="rule-card-premium">
+                    <div class="rcp-icon-box">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <div class="rcp-content">
+                        <h3>PROTOCOLO & ETICA</h3>
+                        <ul class="rcp-list">
+                            <li>
+                                <span class="highlight"><i class="fas fa-clipboard-check"></i> RESULTADOS:</span>
+                                <p>El ganador debe comunicar el resultado en la carpa central.</p>
+                            </li>
+                            <li>
+                                <span class="highlight"><i class="fas fa-bullhorn"></i> SORTEOS:</span>
+                                <p>Se anunciarán por megafonía y WhatsApp. ¡Atentos!</p>
+                            </li>
+                            <li>
+                                <span class="highlight"><i class="fas fa-user-check"></i> FAIR PLAY:</span>
+                                <p>Se exige máxima deportividad y puntualidad en pista.</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="rcp-bg-number">02</div>
+                </div>
+
+                <!-- Card 3: Tiebreakers (Complete) -->
+                <div class="rule-card-premium">
+                    <div class="rcp-icon-box">
+                        <i class="fas fa-sort-amount-down"></i>
+                    </div>
+                    <div class="rcp-content">
+                        <h3>CRITERIOS DESEMPATE</h3>
+                        <ul class="rcp-list">
+                            <li>
+                                <span class="highlight"><i class="fas fa-star"></i> 1º PUNTOS:</span>
+                                <p>Mayor cantidad de puntos obtenidos en el grupo.</p>
+                            </li>
+                            <li>
+                                <span class="highlight"><i class="fas fa-plus-minus"></i> 2º DIFERENCIA:</span>
+                                <p>Mejor diferencia de juegos (Favor - Contra).</p>
+                            </li>
+                            <li>
+                                <span class="highlight"><i class="fas fa-user-friends"></i> 3º ENFRENTAMIENTO:</span>
+                                <p>Resultado directo entre las parejas empatadas.</p>
+                            </li>
+                            <li>
+                                <span class="highlight"><i class="fas fa-random"></i> 4º SORTEO:</span>
+                                <p>En caso de persistir el empate técnico absoluto.</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="rcp-bg-number">03</div>
+                </div>
+
+                <!-- Card 4: Organization -->
+                <div class="rule-card-premium">
+                    <div class="rcp-icon-box">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="rcp-content">
+                        <h3>ORGANIZACIÓN</h3>
+                        <ul class="rcp-list">
+                            <li>
+                                <span class="highlight"><i class="fas fa-clock"></i> AUTORIDAD:</span>
+                                <p>La organización puede modificar horarios por fuerza mayor.</p>
+                            </li>
+                            <li>
+                                <span class="highlight"><i class="fas fa-gavel"></i> DECISIÓN FINAL:</span>
+                                <p>Cualquier imprevisto será resuelto por el Director del Torneo.</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="rcp-bg-number">04</div>
+                </div>
+
+                <!-- Card 5: Equipment & Facilities -->
+                <div class="rule-card-premium">
+                    <div class="rcp-icon-box">
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                    <div class="rcp-content">
+                        <h3>EQUIPAMIENTO</h3>
+                        <ul class="rcp-list">
+                            <li>
+                                <span class="highlight"><i class="fas fa-volleyball-ball"></i> BOLAS NUEVAS:</span>
+                                <p>Se proporcionarán botes de bolas nuevas para el torneo.</p>
+                            </li>
+                            <li>
+                                <span class="highlight"><i class="fas fa-tint"></i> AGUA:</span>
+                                <p>Agua disponible durante todo el torneo para los jugadores.</p>
+                            </li>
+                            <li>
+                                <span class="highlight"><i class="fas fa-restroom"></i> LAVABOS:</span>
+                                <p>Disponibilidad de lavabos en la zona de pistas.</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="rcp-bg-number">05</div>
+                </div>
+
+                <!-- Card 6: Prizes & Event -->
+                <div class="rule-card-premium">
+                    <div class="rcp-icon-box">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <div class="rcp-content">
+                        <h3>PREMIOS & EVENTO</h3>
+                        <ul class="rcp-list">
+                            <li>
+                                <span class="highlight"><i class="fas fa-shopping-bag"></i> BIENVENIDA:</span>
+                                <p>Un pack de bienvenida sorpresa para todos los participantes.</p>
+                            </li>
+                            <li>
+                                <span class="highlight"><i class="fas fa-award"></i> GANADORES:</span>
+                                <p>¡Paletilla de jamón para los grandes ganadores del torneo!</p>
+                            </li>
+                            <li>
+                                <span class="highlight"><i class="fas fa-trophy"></i> CONSOLACIÓN:</span>
+                                <p>Americana final de consolación con premios especiales.</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="rcp-bg-number">06</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Tab -->
+        <section id="stats-tab" class="tab-content" style="display: none;">
+            <h2 class="category-header"><i class="fas fa-chart-line"></i> ESTADÍSTICAS DEL TORNEO</h2>
+
+            <!-- Category Filter for Stats -->
+            <div id="stats-categories" class="sub-nav">
+                <!-- Injected via JS -->
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="kpi-cards-container">
+                <div class="kpi-card">
+                    <div class="kpi-icon"><i class="fas fa-trophy"></i></div>
+                    <div class="kpi-content">
+                        <div class="kpi-value" id="kpi-total-matches">0</div>
+                        <div class="kpi-label">Total Partidos</div>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="kpi-content">
+                        <div class="kpi-value" id="kpi-completion-rate">0%</div>
+                        <div class="kpi-label">Completado</div>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon"><i class="fas fa-fire"></i></div>
+                    <div class="kpi-content">
+                        <div class="kpi-value" id="kpi-avg-games">0</div>
+                        <div class="kpi-label">Juegos/Partido</div>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon"><i class="fas fa-star"></i></div>
+                    <div class="kpi-content">
+                        <div class="kpi-value" id="kpi-top-team">-</div>
+                        <div class="kpi-label">Mejor Pareja</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Grid -->
+            <div class="stats-grid">
+                <!-- Chart 1: Top Teams by Games For -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-medal"></i> Top 10 Parejas - Juegos a Favor</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="chart-top-teams"></canvas>
                     </div>
                 </div>
 
-                <!-- Protocolo -->
-                <div class="rule-card">
-                    <div class="rule-header">
-                        <i class="fas fa-handshake rule-icon"></i>
+                <!-- Chart 2: Victory Distribution -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-chart-pie"></i> Distribución por Categoría</h3>
                     </div>
-                    <h3 class="rule-title">PROTOCOLO</h3>
-                    <div class="rule-content">
-                        <div class="rule-item">
-                            <i class="fas fa-clipboard-list"></i>
-                            <p>Comunicar el resultado en la <strong>carpa de organización</strong>.</p>
-                        </div>
-                        <div class="rule-item">
-                            <i class="fas fa-mobile-alt"></i>
-                            <p>Sorteo a mitad del tiempo (WhatsApp). Si juega, se le guarda el premio.</p>
-                        </div>
-                        <div class="rule-item">
-                            <i class="fas fa-shield-alt"></i>
-                            <p>Se niega rotunda <strong>puntualidad y deportividad</strong>.</p>
-                        </div>
+                    <div class="chart-container">
+                        <canvas id="chart-distribution"></canvas>
                     </div>
                 </div>
 
-                <!-- Organización -->
-                <div class="rule-card">
-                    <div class="rule-header">
-                        <i class="fas fa-users rule-icon"></i>
+                <!-- Chart 3: Game Difference -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-balance-scale"></i> Diferencia de Juegos (Top 10)</h3>
                     </div>
-                    <h3 class="rule-title">ORGANIZACIÓN</h3>
-                    <div class="rule-content">
-                        <div class="rule-item">
-                            <i class="fas fa-calendar-alt"></i>
-                            <p>La organización puede modificar <strong>horarios o pistas</strong> si es necesario.</p>
-                        </div>
-                        <div class="rule-item">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <p>Cualquier caso no previsto será resuelto por la organización.</p>
-                        </div>
+                    <div class="chart-container">
+                        <canvas id="chart-game-diff"></canvas>
                     </div>
                 </div>
 
-                <!-- Criterios de Desempate -->
-                <div class="rule-card">
-                    <div class="rule-header">
-                        <i class="fas fa-balance-scale rule-icon"></i>
+                <!-- Chart 4: Performance by Time -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-clock"></i> Rendimiento por Horario</h3>
                     </div>
-                    <h3 class="rule-title">CRITERIOS DE DESEMPATE</h3>
-                    <div class="rule-content">
-                        <div class="rule-item">
-                            <i class="fas fa-star"></i>
-                            <p>1. <strong>Puntos</strong> totales.</p>
-                        </div>
-                        <div class="rule-item">
-                            <i class="fas fa-plus-minus"></i>
-                            <p>2. <strong>Diferencia de juegos</strong> (+/-).</p>
-                        </div>
-                        <div class="rule-item">
-                            <i class="fas fa-win-award"></i>
-                            <i class="fas fa-medal"></i>
-                            <p>3. <strong>Partidos ganados</strong>.</p>
-                        </div>
-                        <div class="rule-item">
-                            <i class="fas fa-users-arrows"></i>
-                            <p>4. <strong>Enfrentamiento directo</strong>.</p>
-                        </div>
-                        <div class="rule-item">
-                            <i class="fas fa-random"></i>
-                            <p>5. <strong>Sorteo</strong> (si hace falta).</p>
+                    <div class="chart-container">
+                        <canvas id="chart-time-performance"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 5: Tournament Timeline -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-chart-line"></i> Evolución del Torneo</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="chart-timeline"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 6: AI Predictions -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-brain"></i> 🔮 EL ORÁCULO SOMOSPADEL</h3>
+                    </div>
+                    <div class="chart-container" id="predictions-container">
+                        <div class="predictions-list">
+                            <!-- Populated by JS -->
                         </div>
                     </div>
                 </div>
@@ -479,6 +653,14 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="firebase-config.js"></script>
+
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <!-- Analytics & AI Scripts -->
+    <script src="analytics.js"></script>
+    <script src="ai-predictor.js"></script>
+    <script src="stats-integration.js"></script>
 
     <script src="baked_data.js?v=225"></script>
     <script src="app.js?v=225"></script>

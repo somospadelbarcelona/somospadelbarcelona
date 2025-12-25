@@ -410,6 +410,9 @@ function syncWithFirebase() {
             if (typeof renderTicker === 'function') renderTicker();
             if (typeof updateHeaderStats === 'function') updateHeaderStats();
             if (typeof renderLiveFeed === 'function') renderLiveFeed();
+            try {
+                if (typeof renderStatsCharts === 'function') renderStatsCharts();
+            } catch (e) { console.error("Error updating stats:", e); }
 
             if (typeof initAdmin === 'function') initAdmin();
         } else {
@@ -504,14 +507,12 @@ function updateHeaderStats() {
     const liveMatchesEl = document.getElementById('liveMatches');
     if (liveMatchesEl) liveMatchesEl.textContent = liveCount;
 
-    // Next match time
-    const pendingMatches = tournamentData.matches
-        .filter(m => m.status === 'pending' && m.time !== 'TBD')
-        .sort((a, b) => a.time.localeCompare(b.time));
+    // Pending matches (Partidos Pendientes)
+    const pendingCount = tournamentData.matches.filter(m => m.status === 'pending').length;
 
     const nextMatchEl = document.getElementById('nextMatch');
     if (nextMatchEl) {
-        nextMatchEl.textContent = pendingMatches.length > 0 ? pendingMatches[0].time : 'N/A';
+        nextMatchEl.textContent = pendingCount;
     }
 
     // Auto-show live feed if there are live matches
@@ -710,6 +711,11 @@ function init() {
                 if (btn.dataset.tab === 'playoffs') renderBrackets();
                 if (btn.dataset.tab === 'matches') renderMatches();
                 if (btn.dataset.tab === 'standings') renderStandings();
+                if (btn.dataset.tab === 'stats') {
+                    try {
+                        if (typeof initStats === 'function') initStats();
+                    } catch (e) { console.error("Error initializing stats tab:", e); }
+                }
             });
         });
 
@@ -756,6 +762,9 @@ function updateUI() {
     renderStandings();
     renderMatches();
     renderBrackets();
+    try {
+        if (typeof renderStatsCharts === 'function') renderStatsCharts();
+    } catch (e) { console.error("Error rendering initial stats:", e); }
     renderTicker(); // Initialize ticker with results
     initCarousel(); // Initialize sponsor carousel
     updateHeaderStats(); // Update header stats
@@ -786,7 +795,8 @@ function renderStandings() {
     if (!container) return;
     container.innerHTML = '';
 
-    const searchTerm = document.getElementById('standings-search')?.value.toLowerCase().trim();
+    const searchTermRaw = document.getElementById('standings-search')?.value.trim();
+    const searchTerm = normalizeText(searchTermRaw);
     let categoriesToRender = [];
 
     if (searchTerm && searchTerm.length > 0) {
@@ -812,7 +822,7 @@ function renderStandings() {
 
             // If searching, filter to only groups containing the term
             if (searchTerm && searchTerm.length > 0) {
-                const matchesTerm = standings.some(s => s.name.toLowerCase().includes(searchTerm));
+                const matchesTerm = standings.some(s => normalizeText(s.name).includes(searchTerm));
                 if (!matchesTerm) return; // Skip this group
             }
 
@@ -833,7 +843,7 @@ function renderStandings() {
             `;
 
             standings.forEach((team, index) => {
-                const isMatch = searchTerm && team.name.toLowerCase().includes(searchTerm);
+                const isMatch = searchTerm && normalizeText(team.name).includes(searchTerm);
                 const highlightClass = isMatch ? 'search-highlight' : ''; // CSS needed
                 const rankClass = index < 2 ? `rank-${index + 1} winner-highlight` : `rank-${index + 1}`;
 
@@ -877,11 +887,13 @@ function renderMatches() {
         const tabs = document.getElementById('matches-categories');
         if (tabs) tabs.style.display = 'none'; // Hide category tabs during global search
 
+        const normTerm = normalizeText(searchTerm);
+
         visibleMatches = tournamentData.matches.filter(m =>
-            m.teamA.toLowerCase().includes(searchTerm) ||
-            m.teamB.toLowerCase().includes(searchTerm) ||
-            m.group.toString().toLowerCase().includes(searchTerm) ||
-            m.category.toLowerCase().includes(searchTerm)
+            normalizeText(m.teamA).includes(normTerm) ||
+            normalizeText(m.teamB).includes(normTerm) ||
+            normalizeText(m.group).includes(normTerm) ||
+            normalizeText(m.category).includes(normTerm)
         );
     } else {
         // STANDARD VIEW: Filter by Category and Group Stage only (default for this tab)
@@ -1080,7 +1092,7 @@ function initAdmin() {
                     <span class="amc-team-name editable" onclick="editTeamName(${match.id}, 'teamA')">${match.teamA}</span>
                     <div class="amc-score-control">
                         <button class="ctrl-btn btn-minus" onclick="updateScore(${match.id}, 'teamA', -1)">-</button>
-                        <span class="score-val">${match.scoreA ?? 0}</span>
+                        <span class="score-val">${(match.scoreA == null || isNaN(match.scoreA)) ? 0 : match.scoreA}</span>
                         <button class="ctrl-btn btn-plus" onclick="updateScore(${match.id}, 'teamA', 1)">+</button>
                     </div>
                 </div>
@@ -1088,7 +1100,7 @@ function initAdmin() {
                     <span class="amc-team-name editable" onclick="editTeamName(${match.id}, 'teamB')">${match.teamB}</span>
                     <div class="amc-score-control">
                         <button class="ctrl-btn btn-minus" onclick="updateScore(${match.id}, 'teamB', -1)">-</button>
-                        <span class="score-val">${match.scoreB ?? 0}</span>
+                        <span class="score-val">${(match.scoreB == null || isNaN(match.scoreB)) ? 0 : match.scoreB}</span>
                         <button class="ctrl-btn btn-plus" onclick="updateScore(${match.id}, 'teamB', 1)">+</button>
                     </div>
                 </div>
@@ -1177,8 +1189,10 @@ function toggleAdminSort() {
 function updateScore(id, team, delta) {
     const match = tournamentData.matches.find(m => m.id === id);
     if (match) {
-        if (match.scoreA === null) match.scoreA = 0;
-        if (match.scoreB === null) match.scoreB = 0;
+        // Fix improper values (undefined, null, NaN)
+        if (match.scoreA == null || isNaN(match.scoreA)) match.scoreA = 0;
+        if (match.scoreB == null || isNaN(match.scoreB)) match.scoreB = 0;
+
         if (team === 'teamA') match.scoreA = Math.max(0, parseInt(match.scoreA) + delta);
         else match.scoreB = Math.max(0, parseInt(match.scoreB) + delta);
         saveState();
@@ -1454,6 +1468,10 @@ window.goToSponsor = goToSponsor;
 window.toggleLiveFeed = toggleLiveFeed;
 window.renderLiveFeed = renderLiveFeed;
 
+function normalizeText(text) {
+    return text ? text.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : "";
+}
+
 // --- AUTO-REFRESH SYSTEM (Player Dashboard Only) ---
 let lastKnownTimestamp = localStorage.getItem('dataTimestamp');
 
@@ -1511,4 +1529,89 @@ if (typeof document !== 'undefined') {
 
         startAutoRefresh(); // Start auto-refresh polling
     });
+}
+
+/**
+ * EXPORTACIÓN DE BACKUP LOCAL
+ * Genera un archivo JSON con todos los datos del torneo
+ */
+/**
+ * EXPORTACIÓN DE BACKUP LOCAL (EXCEL)
+ * Genera un archivo XLSX con múltiples hojas
+ */
+function exportBackup() {
+    if (!tournamentData) {
+        alert("❌ No hay datos para exportar");
+        return;
+    }
+
+    if (typeof XLSX === 'undefined') {
+        alert("⚠️ Librería Excel no cargada. Inténtalo de nuevo en 5 segundos.");
+        return;
+    }
+
+    try {
+        // 1. Preparar datos para Excel
+        const matchesData = tournamentData.matches.map(m => ({
+            ID: m.id,
+            Categoria: m.category,
+            Grupo: m.group,
+            Equipo_A: m.teamA,
+            Equipo_B: m.teamB,
+            Score_A: m.scoreA,
+            Score_B: m.scoreB,
+            Estado: m.status,
+            Hora: m.time,
+            Pista: m.court
+        }));
+
+        // Clasificación (simplificada)
+        let standingsData = [];
+        tournamentData.categories.forEach(cat => {
+            const groups = [...new Set(tournamentData.matches.filter(m => m.category === cat).map(m => m.group))];
+            groups.forEach(grp => {
+                const std = getStandings(cat, grp);
+                std.forEach((s, idx) => {
+                    standingsData.push({
+                        Categoria: cat,
+                        Grupo: grp,
+                        Posicion: idx + 1,
+                        Equipo: s.name,
+                        Puntos: s.points,
+                        Jugados: s.played,
+                        Ganados: s.won,
+                        Diferencia: s.diff
+                    });
+                });
+            });
+        });
+
+        // 2. Crear Libro de Excel
+        const wb = XLSX.utils.book_new();
+
+        // Hoja 1: Partidos
+        const wsMatches = XLSX.utils.json_to_sheet(matchesData);
+        XLSX.utils.book_append_sheet(wb, wsMatches, "Partidos");
+
+        // Hoja 2: Clasificación
+        const wsStandings = XLSX.utils.json_to_sheet(standingsData);
+        XLSX.utils.book_append_sheet(wb, wsStandings, "Clasificación");
+
+        // Hoja 3: RAW (Backup puro JSON)
+        const wsRaw = XLSX.utils.json_to_sheet([{ json: JSON.stringify(tournamentData) }]);
+        XLSX.utils.book_append_sheet(wb, wsRaw, "RAW_DATA");
+
+        // 3. Generar archivo y descargar
+        const now = new Date();
+        const dateStr = now.toISOString().slice(0, 10);
+        const timeStr = now.toTimeString().slice(0, 5).replace(':', '-');
+        const filename = `SOMOSPADEL_MASTER_${dateStr}_${timeStr}.xlsx`;
+
+        XLSX.writeFile(wb, filename);
+
+        console.log(`✅ Backup Excel exportado: ${filename}`);
+    } catch (e) {
+        console.error("Error exportando Excel:", e);
+        alert("❌ Error al generar el Excel: " + e.message);
+    }
 }
