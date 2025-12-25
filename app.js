@@ -9,9 +9,8 @@ window.onunhandledrejection = function (event) {
     console.error("Unhandled Promise Rejection:", event.reason);
 };
 
-// --- CONFIGURATION ---
-const APP_VERSION = "2.2.0-CLOUD-SYNC-ACTIVE";
-console.log(`🚀 SOMOSPADEL Dashboard v${APP_VERSION} initialized.`);
+const APP_VERSION = "2.2.1-FORCE-SYNC"; // Cache Buster
+console.log(`🚀 SOMOSPADEL Dashboard v${APP_VERSION} inicializado.`);
 
 const RAW_TEAMS = {
     "4ª Mixta": {
@@ -296,17 +295,28 @@ let activeAdminSort = 'id'; // 'id' or 'time'
 
 // Save function with timestamp for auto-refresh
 function saveState() {
-    const dataStr = JSON.stringify(tournamentData);
-    localStorage.setItem('tournamentData', dataStr);
-    localStorage.setItem('dataTimestamp', Date.now().toString());
+    return new Promise((resolve, reject) => {
+        const dataStr = JSON.stringify(tournamentData);
+        localStorage.setItem('tournamentData', dataStr);
+        localStorage.setItem('dataTimestamp', Date.now().toString());
 
-    // PUSH TO FIREBASE (Real-time Cloud Sync)
-    if (window.isFirebaseActive && window.db) {
-        window.db.ref('tournament_state').set(tournamentData)
-            .catch(err => console.error("Firebase Push Error:", err));
-    }
-    renderTicker(); // Update ticker when data changes
-    updateHeaderStats(); // Update header stats
+        // PUSH TO FIREBASE (Real-time Cloud Sync)
+        if (window.isFirebaseActive && window.db) {
+            window.db.ref('tournament_state').set(tournamentData)
+                .then(() => {
+                    console.log("✅ Sincronización con Firebase con éxito.");
+                    resolve();
+                })
+                .catch(err => {
+                    console.error("Firebase Push Error:", err);
+                    reject(err);
+                });
+        } else {
+            resolve(); // No Firebase, resolve anyway
+        }
+        renderTicker();
+        updateHeaderStats();
+    });
 }
 
 // FUNCIÓN PARA GUARDAR RESULTADO ESPECÍFICO (Solicitada por usuario)
@@ -1191,25 +1201,22 @@ function simularGrupos() {
             counting++;
         }
     });
-    saveState();
-    const totalGroup = tournamentData.matches.filter(m => !m.stage || m.stage === 'group').length;
-    alert(`Se han simulado ${counting} resultados. Total Fase de Grupos: ${totalGroup} partidos.`);
-    location.reload();
+    saveState().then(() => {
+        alert(`Se han simulado ${counting} resultados.`);
+        location.reload();
+    });
 }
 
 function resetTotalScores() {
-    if (!confirm("⛔ PELIGRO: ¿REGENERAR TODO EL TORNEO? \n\nEsto borrará todos los resultados actuales y creará la nueva estructura de 75 PARTIDOS según la configuración oficial. \n\n¿Proceder?")) return;
+    if (!confirm("⛔ PELIGRO: ¿REGENERAR TODO EL TORNEO? \n\nEsto borrará todos los resultados actuales y creará la estructura limpia de 75 PARTIDOS.\n\n¿Proceder?")) return;
 
-    // Clear localStorage to be safe
     localStorage.removeItem('tournamentData');
-
-    // Generate fresh
     tournamentData = generateInitialData();
-    saveState();
 
-    const count = tournamentData.matches.filter(m => !m.stage || m.stage === 'group').length;
-    alert(`Torneo regenerado con éxito. \nTotal Fase de Grupos: ${count} partidos.`);
-    location.reload();
+    saveState().then(() => {
+        alert(`Torneo regenerado con éxito.`);
+        location.reload();
+    });
 }
 
 function exportData() {
