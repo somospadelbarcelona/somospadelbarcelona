@@ -466,7 +466,23 @@
             }
         }
     </style>
+<script>
+  // Función que guarda un resultado en Firebase
+  function guardarResultadoFirebase(partido, resultado) {
+    if(!partido || !resultado) return;
+    // Guardamos dentro de 'tournament_state' el resultado del partido
+    database.ref('tournament_state/' + partido).set({
+      resultado: resultado
+    });
+    console.log("Resultado guardado:", partido, resultado);
+  }
 
+  // Ejemplo de cómo usarlo:
+  // Si tu Admin ya tiene botones o inputs, reemplaza la llamada de guardar resultados por:
+  // guardarResultadoFirebase("Partido 1", "6-3")
+</script>
+
+    
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -478,6 +494,7 @@
 
 
 </html>
+
 
 
 
