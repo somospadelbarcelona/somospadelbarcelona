@@ -3,7 +3,7 @@
 const firebaseConfig = {
     apiKey: "AIzaSyDYeT0NirzCvUZuypXWto8Dlwyy5gAsVQE",
     authDomain: "somospadelbarcelona-5def2.firebaseapp.com",
-    databaseURL: "https://somospadelbarcelona-5def2-default-rtdb.europe-west1.firebasedatabase.app/",
+    databaseURL: "https://somospadelbarcelona-5def2-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "somospadelbarcelona-5def2",
     storageBucket: "somospadelbarcelona-5def2.firebasestorage.app",
     messagingSenderId: "486590022834",
@@ -18,9 +18,9 @@ window.isFirebaseActive = false;
 if (firebaseConfig.apiKey !== "TU_API_KEY") {
     try {
         firebase.initializeApp(firebaseConfig);
-        window.db = firebase.app().database(firebaseConfig.databaseURL);
+        window.db = firebase.database();
         window.isFirebaseActive = true;
-        console.log("🔥 Firebase Live Sync: ACTIVADO (" + firebaseConfig.databaseURL + ")");
+        console.log("🔥 Firebase Live Sync: ACTIVADO");
     } catch (err) {
         console.error("❌ Error inicializando Firebase:", err);
     }

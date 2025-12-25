@@ -229,9 +229,9 @@ let tournamentData = (function () {
 function validateAndRepairData() {
     try {
         if (!tournamentData || !tournamentData.matches || !Array.isArray(tournamentData.matches)) {
-            console.warn("Invalid data structure detected. Resetting to defaults...");
+            console.warn("Invalid data structure detected. Using defaults...");
             tournamentData = generateInitialData();
-            saveState();
+            // YA NO GUARDAMOS AQUÍ. Esperamos a que Firebase nos diga si hay algo en la nube.
         }
 
         // Ensure all matches have necessary fields
@@ -309,6 +309,11 @@ function saveState() {
                 })
                 .catch(err => {
                     console.error("Firebase Push Error:", err);
+                    if (err.code === 'PERMISSION_DENIED') {
+                        alert("❌ ERROR DE PERMISOS: Firebase ha bloqueado el guardado. Revisa las 'Rules' en tu consola de Firebase y ponlas en true.");
+                    } else {
+                        alert("❌ ERROR FIREBASE: " + err.message);
+                    }
                     reject(err);
                 });
         } else {
@@ -337,7 +342,10 @@ function saveMatchResult(matchName, resultado) {
     if (window.isFirebaseActive && window.db) {
         window.db.ref('tournament_state/' + matchName).set(resultado)
             .then(() => console.log(`✓ Resultado de "${matchName}" guardado en Firebase.`))
-            .catch(err => console.error("Error guardando resultado:", err));
+            .catch(err => {
+                console.error("Error guardando resultado:", err);
+                alert("❌ Fallo al guardar en Firebase: " + err.message);
+            });
     }
 }
 
