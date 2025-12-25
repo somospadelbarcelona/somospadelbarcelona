@@ -131,11 +131,11 @@ function createBracketNode(match) {
         <div class="node-content">
             <div class="node-team-row ${winA ? 'winner' : ''}">
                 <span class="node-name">${match.teamA}</span>
-                ${sA !== null ? `<span class="node-score-box">${sA}</span>` : ''}
+                <span class="node-score-box">${sA ?? 0}</span>
             </div>
             <div class="node-team-row ${winB ? 'winner' : ''}">
                 <span class="node-name">${match.teamB}</span>
-                ${sB !== null ? `<span class="node-score-box">${sB}</span>` : ''}
+                <span class="node-score-box">${sB ?? 0}</span>
             </div>
         </div>
     `;

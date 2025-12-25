@@ -14,6 +14,26 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Deshabilitar DevTools -->
+    <script>
+        // Bloquear F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+                (e.ctrlKey && e.key === 'U')) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Bloquear clic derecho
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+            return false;
+        });
+    </script>
+
     <style>
         /* Admin Specific Overrides for Premium Card Look */
         body {
@@ -472,20 +492,12 @@
                 <i class="fas fa-dice"></i> Simular Grupos
             </button>
 
-            <button onclick="forceSyncSchedule()" class="action-btn"
-                style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);">
-                <i class="fas fa-sync-alt"></i> Sincronizar Calendario
-            </button>
 
             <button onclick="saveState().then(() => alert('✅ Datos forzados a la nube con éxito.'))" class="action-btn"
                 style="background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%); box-shadow: 0 4px 15px rgba(29, 78, 216, 0.3);">
                 <i class="fas fa-cloud-upload-alt"></i> Forzar Sincro Nube
             </button>
 
-            <button onclick="exportData()" class="action-btn"
-                style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);">
-                <i class="fas fa-file-export"></i> Cloud Sync (JSON)
-            </button>
 
             <button onclick="resetTotalScores()" class="action-btn btn-reset">
                 <i class="fas fa-trash-alt"></i> Reset Total
@@ -512,8 +524,8 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="firebase-config.js"></script>
 
-    <script src="baked_data.js?v=221"></script>
-    <script src="app.js?v=221"></script>
+    <script src="baked_data.js?v=225"></script>
+    <script src="app.js?v=225"></script>
     <script>
         // Init Admin Panel if loaded standalone
         document.addEventListener('DOMContentLoaded', () => {

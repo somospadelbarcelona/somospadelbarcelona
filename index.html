@@ -14,6 +14,26 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Deshabilitar DevTools -->
+    <script>
+        // Bloquear F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+                (e.ctrlKey && e.key === 'U')) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Bloquear clic derecho
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+            return false;
+        });
+    </script>
+
 </head>
 
 <body>
@@ -70,9 +90,6 @@
                 </div>
             </div>
 
-            <div class="manual-refresh-btn" id="manualRefreshBtn">
-                <i class="fas fa-sync-alt refresh-icon"></i> Actualizar
-            </div>
 
             <div id="cloud-status-indicator"
                 style="font-size: 0.75rem; font-weight: 800; color: #888; display: flex; align-items: center; gap: 5px; background: rgba(0,0,0,0.3); padding: 5px 12px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1);">
@@ -463,8 +480,8 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="firebase-config.js"></script>
 
-    <script src="baked_data.js?v=221"></script>
-    <script src="app.js?v=221"></script>
+    <script src="baked_data.js?v=225"></script>
+    <script src="app.js?v=225"></script>
 </body>
 
 

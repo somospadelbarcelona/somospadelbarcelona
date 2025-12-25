@@ -1080,7 +1080,7 @@ function initAdmin() {
                     <span class="amc-team-name editable" onclick="editTeamName(${match.id}, 'teamA')">${match.teamA}</span>
                     <div class="amc-score-control">
                         <button class="ctrl-btn btn-minus" onclick="updateScore(${match.id}, 'teamA', -1)">-</button>
-                        <span class="score-val">${match.scoreA !== null ? match.scoreA : '-'}</span>
+                        <span class="score-val">${match.scoreA ?? 0}</span>
                         <button class="ctrl-btn btn-plus" onclick="updateScore(${match.id}, 'teamA', 1)">+</button>
                     </div>
                 </div>
@@ -1088,7 +1088,7 @@ function initAdmin() {
                     <span class="amc-team-name editable" onclick="editTeamName(${match.id}, 'teamB')">${match.teamB}</span>
                     <div class="amc-score-control">
                         <button class="ctrl-btn btn-minus" onclick="updateScore(${match.id}, 'teamB', -1)">-</button>
-                        <span class="score-val">${match.scoreB !== null ? match.scoreB : '-'}</span>
+                        <span class="score-val">${match.scoreB ?? 0}</span>
                         <button class="ctrl-btn btn-plus" onclick="updateScore(${match.id}, 'teamB', 1)">+</button>
                     </div>
                 </div>
@@ -1361,11 +1361,11 @@ function createBracketNode(match) {
         <div class="node-content">
             <div class="node-team-row ${winA ? 'winner' : ''}">
                 <span class="node-name">${match.teamA}</span>
-                ${sA !== null ? `<span class="node-score-box">${sA}</span>` : ''}
+                <span class="node-score-box">${sA ?? 0}</span>
             </div>
             <div class="node-team-row ${winB ? 'winner' : ''}">
                 <span class="node-name">${match.teamB}</span>
-                ${sB !== null ? `<span class="node-score-box">${sB}</span>` : ''}
+                <span class="node-score-box">${sB ?? 0}</span>
             </div>
         </div>
     `;
