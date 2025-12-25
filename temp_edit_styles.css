@@ -1,0 +1,25 @@
+/* --- EDITABLE NAMES --- */
+.amc-team-name.editable {
+    cursor: pointer;
+    transition: color 0.2s;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+}
+
+.amc-team-name.editable:hover {
+    color: var(--brand-volt);
+    border-bottom-color: var(--brand-volt);
+}
+
+.amc-team-name.editable::after {
+    content: '\f303';
+    /* Pencil Icon FontAwesome */
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    margin-left: 8px;
+    font-size: 0.8em;
+    opacity: 0.3;
+}
+
+.amc-team-name.editable:hover::after {
+    opacity: 1;
+}

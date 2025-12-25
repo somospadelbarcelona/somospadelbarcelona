@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOMOSPADEL - Torneo Dashboard</title>
+
+    <!-- Security Layer (Loaded First) -->
+    <script src="security.js"></script>
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none';">
+
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-brand">
+            <img src="logo_somospadel.png" alt="Somos Pádel" class="logo-event"
+                onerror="this.src='https://via.placeholder.com/60?text=SP'"
+                style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+            <div class="brand-details">
+                <div class="brand-title">SOMOS<span>PADEL</span></div>
+                <div class="brand-subtitle">Torneo Oficial</div>
+            </div>
+        </div>
+
+        <nav class="main-nav">
+            <button class="nav-btn active" data-tab="standings">Clasificación</button>
+            <button class="nav-btn" data-tab="matches">Partidos</button>
+            <button class="nav-btn" data-tab="playoffs">Eliminatorias</button>
+            <button class="nav-btn" data-tab="rules">Normativa</button>
+            <a href="admin.html" class="nav-btn" style="text-decoration: none; color: inherit;">Admin</a>
+        </nav>
+
+        <div class="header-stats">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value" id="totalMatches">0</div>
+                    <div class="stat-label">Partidos Jugados</div>
+                </div>
+            </div>
+
+            <div class="stat-card live-stat">
+                <div class="stat-icon pulsing">
+                    <i class="fas fa-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value" id="liveMatches">0</div>
+                    <div class="stat-label">En Juego</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value" id="nextMatch">--:--</div>
+                    <div class="stat-label">Próximo Partido</div>
+                </div>
+            </div>
+
+            <div class="manual-refresh-btn" id="manualRefreshBtn">
+                <i class="fas fa-sync-alt refresh-icon"></i> Actualizar
+            </div>
+        </div>
+    </header>
+
+    <!-- Live Match Feed Panel -->
+    <div class="live-feed-panel" id="liveFeedPanel" style="display: none;">
+        <div class="live-feed-header">
+            <i class="fas fa-broadcast-tower"></i>
+            <span>PARTIDOS EN VIVO</span>
+            <button class="close-feed" onclick="toggleLiveFeed()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="live-feed-content" id="liveFeedContent">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="dashboard-container">
+
+        <!-- Standings Tab -->
+        <section id="standings-tab" class="tab-content active-tab">
+            <div class="search-filter-controls">
+                <div class="search-input-wrapper">
+                    <div class="search-icon"><i class="fas fa-search"></i></div>
+                    <input type="text" id="standings-search" placeholder="Buscar jugador o equipo...">
+                </div>
+            </div>
+
+            <!-- Category Tabs for Standings -->
+            <div id="standings-categories" class="sub-nav">
+                <!-- Injected via JS -->
+            </div>
+            <div id="groups-container">
+                <!-- Groups will be injected here via JS -->
+            </div>
+        </section>
+
+        <!-- Matches Tab -->
+        <section id="matches-tab" class="tab-content" style="display: none;">
+            <div class="search-filter-controls">
+                <div class="search-input-wrapper">
+                    <div class="search-icon"><i class="fas fa-search"></i></div>
+                    <input type="text" id="matches-search" placeholder="Buscar partido por jugadora o equipo...">
+                </div>
+            </div>
+            <!-- Category Tabs for Matches -->
+            <div id="matches-categories" class="sub-nav">
+                <!-- Injected via JS -->
+            </div>
+            <div id="matches-container" class="matches-grid">
+                <!-- Matches injected here -->
+            </div>
+        </section>
+
+        <!-- Playoffs Tab -->
+        <section id="playoffs-tab" class="tab-content" style="display: none;">
+            <h2 class="category-header">Fase Eliminatoria</h2>
+            <div id="playoffs-categories" class="sub-nav">
+                <!-- Injected via JS -->
+            </div>
+            <div id="brackets-container">
+                <!-- Brackets injected here -->
+                <p style="color: white; text-align: center; margin-top: 2rem;">Las eliminatorias aparecerán aquí cuando
+                    la fase de grupos finalice.</p>
+            </div>
+        </section>
+
+        <!-- Rules Tab -->
+        <section id="rules-tab" class="tab-content" style="display: none;">
+            <h2 class="category-header"><i class="fas fa-gavel"></i> NORMATIVA DEL TORNEO</h2>
+
+            <div class="rules-grid">
+                <!-- Reglas de Juego -->
+                <div class="rule-card">
+                    <div class="rule-header">
+                        <i class="fas fa-trophy rule-icon"></i>
+                    </div>
+                    <h3 class="rule-title">REGLAS DE JUEGO</h3>
+                    <div class="rule-content">
+                        <div class="rule-item">
+                            <i class="fas fa-check-circle"></i>
+                            <p>Todos los partidos se juegan con <strong>punto de oro</strong>.</p>
+                        </div>
+                        <div class="rule-item">
+                            <i class="fas fa-edit"></i>
+                            <p>Ante cualquier duda, <strong>se repite el punto</strong>.</p>
+                        </div>
+                        <div class="rule-item">
+                            <i class="fas fa-volleyball-ball"></i>
+                            <p>Si pita el final del tiempo, se termina el <strong>juego en curso</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Protocolo -->
+                <div class="rule-card">
+                    <div class="rule-header">
+                        <i class="fas fa-handshake rule-icon"></i>
+                    </div>
+                    <h3 class="rule-title">PROTOCOLO</h3>
+                    <div class="rule-content">
+                        <div class="rule-item">
+                            <i class="fas fa-clipboard-list"></i>
+                            <p>Comunicar el resultado en la <strong>carpa de organización</strong>.</p>
+                        </div>
+                        <div class="rule-item">
+                            <i class="fas fa-mobile-alt"></i>
+                            <p>Sorteo a mitad del tiempo (WhatsApp). Si juega, se le guarda el premio.</p>
+                        </div>
+                        <div class="rule-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <p>Se niega rotunda <strong>puntualidad y deportividad</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Organización -->
+                <div class="rule-card">
+                    <div class="rule-header">
+                        <i class="fas fa-users rule-icon"></i>
+                    </div>
+                    <h3 class="rule-title">ORGANIZACIÓN</h3>
+                    <div class="rule-content">
+                        <div class="rule-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <p>La organización puede modificar <strong>horarios o pistas</strong> si es necesario.</p>
+                        </div>
+                        <div class="rule-item">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>Cualquier caso no previsto será resuelto por la organización.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Criterios de Desempate -->
+                <div class="rule-card">
+                    <div class="rule-header">
+                        <i class="fas fa-balance-scale rule-icon"></i>
+                    </div>
+                    <h3 class="rule-title">CRITERIOS DE DESEMPATE</h3>
+                    <div class="rule-content">
+                        <div class="rule-item">
+                            <i class="fas fa-star"></i>
+                            <p>1. <strong>Puntos</strong> totales.</p>
+                        </div>
+                        <div class="rule-item">
+                            <i class="fas fa-plus-minus"></i>
+                            <p>2. <strong>Diferencia de juegos</strong> (+/-).</p>
+                        </div>
+                        <div class="rule-item">
+                            <i class="fas fa-win-award"></i>
+                            <i class="fas fa-medal"></i>
+                            <p>3. <strong>Partidos ganados</strong>.</p>
+                        </div>
+                        <div class="rule-item">
+                            <i class="fas fa-users-arrows"></i>
+                            <p>4. <strong>Enfrentamiento directo</strong>.</p>
+                        </div>
+                        <div class="rule-item">
+                            <i class="fas fa-random"></i>
+                            <p>5. <strong>Sorteo</strong> (si hace falta).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="sponsors-section">
+        <h3 class="sponsors-title">COLABORADORES EVENTO</h3>
+        <div class="sponsors-carousel-container">
+            <div class="sponsors-carousel-track" id="sponsorsTrack">
+                <!-- Original Items -->
+                <div class="sponsor-slide"><img src="sponsor_0.png" class="sponsor-logo"
+                        onerror="this.style.display='none'"></div>
+                <div class="sponsor-slide"><img src="sponsor_1.png" class="sponsor-logo"
+                        onerror="this.style.display='none'"></div>
+                <div class="sponsor-slide"><img src="sponsor_2.png" class="sponsor-logo"
+                        onerror="this.style.display='none'"></div>
+                <div class="sponsor-slide"><img src="sponsor_3.png" class="sponsor-logo"
+                        onerror="this.style.display='none'"></div>
+                <div class="sponsor-slide"><img src="sponsor_4.png" class="sponsor-logo"
+                        onerror="this.style.display='none'"></div>
+                <div class="sponsor-slide"><img src="sponsor_dormilona.png" class="sponsor-logo"
+                        onerror="this.style.display='none'"></div>
+                <div class="sponsor-slide"><img src="sponsor_6.png" class="sponsor-logo"
+                        onerror="this.style.display='none'"></div>
+                <!-- Cloned Items for loop -->
+                <div class="sponsor-slide"><img src="sponsor_0.png" class="sponsor-logo"
+                        onerror="this.style.display='none'"></div>
+                <div class="sponsor-slide"><img src="sponsor_1.png" class="sponsor-logo"
+                        onerror="this.style.display='none'"></div>
+                <div class="sponsor-slide"><img src="sponsor_2.png" class="sponsor-logo"
+                        onerror="this.style.display='none'"></div>
+                <div class="sponsor-slide"><img src="sponsor_3.png" class="sponsor-logo"
+                        onerror="this.style.display='none'"></div>
+                <div class="sponsor-slide"><img src="sponsor_4.png" class="sponsor-logo"
+                        onerror="this.style.display='none'"></div>
+                <div class="sponsor-slide"><img src="sponsor_dormilona.png" class="sponsor-logo"
+                        onerror="this.style.display='none'"></div>
+                <div class="sponsor-slide"><img src="sponsor_6.png" class="sponsor-logo"
+                        onerror="this.style.display='none'"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Breaking News Ticker (Footer) -->
+    <div id="results-ticker" class="results-ticker">
+        <div class="ticker-header">
+            <div class="ticker-badge">
+                <i class="fas fa-bolt"></i>
+                <span>ÚLTIMA HORA</span>
+            </div>
+            <div class="ticker-live-indicator">
+                <span class="live-dot-ticker"></span>
+                <span>RESULTADOS EN VIVO</span>
+            </div>
+        </div>
+        <div class="ticker-content-wrapper">
+            <div class="ticker-content">
+                <div id="ticker-results" class="ticker-results">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Pro Ticker Design */
+        .results-ticker {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            z-index: 999;
+            border-top: 3px solid var(--brand-volt);
+            box-shadow: 0 -5px 30px rgba(204, 255, 0, 0.2);
+        }
+
+        .ticker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 2rem;
+            background: rgba(204, 255, 0, 0.1);
+            border-bottom: 1px solid rgba(204, 255, 0, 0.3);
+        }
+
+        .ticker-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: var(--brand-volt);
+            color: black;
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            font-weight: 900;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(204, 255, 0, 0.4);
+            animation: badge-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes badge-pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 4px 15px rgba(204, 255, 0, 0.4);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 6px 25px rgba(204, 255, 0, 0.6);
+            }
+        }
+
+        .ticker-badge i {
+            font-size: 1rem;
+            animation: bolt-flash 1.5s ease-in-out infinite;
+        }
+
+        @keyframes bolt-flash {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        .ticker-live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #22c55e;
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .live-dot-ticker {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse-live 1.5s ease-in-out infinite;
+        }
+
+        .ticker-content-wrapper {
+            overflow: hidden;
+            background: #000;
+        }
+
+        .ticker-content {
+            display: flex;
+            align-items: center;
+            animation: scroll-ticker 40s linear infinite;
+            padding: 0.8rem 0;
+        }
+
+        .ticker-results {
+            display: flex;
+            gap: 4rem;
+            padding: 0 2rem;
+        }
+
+        .ticker-item {
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 0.4rem 1rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            white-space: nowrap;
+        }
+
+        .ticker-item:hover {
+            background: rgba(204, 255, 0, 0.15);
+            border-color: var(--brand-volt);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(204, 255, 0, 0.3);
+        }
+
+        .ticker-score {
+            font-weight: 900;
+            font-size: 1.2em;
+            margin: 0 0.5rem;
+            color: var(--brand-volt);
+            text-shadow: 0 0 10px rgba(204, 255, 0, 0.5);
+        }
+
+        .ticker-winner {
+            color: #22c55e;
+            font-weight: 700;
+        }
+
+        .ticker-loser {
+            color: #888;
+            opacity: 0.8;
+        }
+
+        @keyframes scroll-ticker {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+    </style>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

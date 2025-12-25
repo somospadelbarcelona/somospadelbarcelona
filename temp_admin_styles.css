@@ -1,0 +1,43 @@
+/* --- ADMIN STAGE COLORS --- */
+.admin-match-card.stage-quarter {
+    border-left: 4px solid #00C2FF;
+    /* Cyan */
+}
+
+.admin-match-card.stage-quarter .amc-header {
+    background: linear-gradient(90deg, rgba(0, 194, 255, 0.1), transparent);
+}
+
+.admin-match-card.stage-quarter .amc-header div:first-child {
+    color: #00C2FF;
+}
+
+.admin-match-card.stage-semi {
+    border-left: 4px solid #FF9900;
+    /* Orange */
+}
+
+.admin-match-card.stage-semi .amc-header {
+    background: linear-gradient(90deg, rgba(255, 153, 0, 0.1), transparent);
+}
+
+.admin-match-card.stage-semi .amc-header div:first-child {
+    color: #FF9900;
+}
+
+.admin-match-card.stage-final {
+    border-left: 4px solid #CCFF00;
+    /* Volt/Gold */
+    box-shadow: 0 0 15px rgba(204, 255, 0, 0.1);
+}
+
+.admin-match-card.stage-final .amc-header {
+    background: linear-gradient(90deg, rgba(204, 255, 0, 0.15), transparent);
+}
+
+.admin-match-card.stage-final .amc-header div:first-child {
+    color: #CCFF00;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}

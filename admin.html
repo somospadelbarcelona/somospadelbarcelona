@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - SOMOSPADEL</title>
+
+    <!-- Security Layer (Loaded First) -->
+    <script src="security.js"></script>
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none';">
+
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Admin Specific Overrides for Premium Card Look */
+        body {
+            padding-top: 100px;
+            background-color: #050505;
+        }
+
+        /* Admin Header */
+        .admin-header-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-brand {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .admin-brand span {
+            color: var(--brand-volt);
+        }
+
+        .admin-controls-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        /* Search & Filter */
+        .admin-search {
+            background: #050505;
+            border: 1px solid #333;
+            color: white;
+            padding: 0.8rem 1.2rem;
+            border-radius: 50px;
+            width: 350px;
+            font-family: var(--font-main);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .admin-search:focus {
+            border-color: var(--brand-volt);
+            box-shadow: 0 0 15px rgba(204, 255, 0, 0.25);
+            outline: none;
+            background: #000;
+        }
+
+        /* Action Buttons */
+        .action-btn {
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 800;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-family: var(--font-main);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .btn-simular {
+            background: linear-gradient(135deg, #6fdc0e 0%, #a2ff00 100%);
+            /* Using Volt/Green theme instead of purple to match logo unless requested otherwise, 
+               but user image showed purple. Let's use Purple as requested. */
+            background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .back-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-right: 2rem;
+            padding: 0.6rem 1.2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: white;
+            color: black;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* Match Grid */
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* Match Card */
+        .admin-match-card {
+            background: #0f0f0f;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 0;
+            /* Header/Body split */
+            overflow: hidden;
+            position: relative;
+        }
+
+        .amc-header {
+            padding: 0.8rem 1.2rem;
+            background: #141414;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #888;
+            font-weight: 700;
+            border-bottom: 1px solid #222;
+            text-transform: uppercase;
+        }
+
+        .amc-cat {
+            color: var(--brand-volt);
+        }
+
+        .amc-body {
+            padding: 1.5rem 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .amc-team-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .amc-team-name {
+            font-weight: 600;
+            color: white;
+            font-size: 1rem;
+            max-width: 180px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .amc-score-control {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .score-val {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: white;
+            width: 30px;
+            text-align: center;
+            font-family: var(--font-nums);
+        }
+
+        .ctrl-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 900;
+            font-size: 1rem;
+            transition: transform 0.1s;
+        }
+
+        .ctrl-btn:active {
+            transform: scale(0.9);
+        }
+
+        .btn-minus {
+            background: #262626;
+            color: #666;
+        }
+
+        .btn-plus {
+            background: var(--brand-volt);
+            color: black;
+        }
+
+        .amc-footer {
+            padding: 1rem 1.2rem;
+            background: #141414;
+            border-top: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .amc-status {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #555;
+            text-transform: uppercase;
+        }
+
+        .amc-status.live {
+            color: #22c55e;
+        }
+
+        /* Green for finalized/live */
+
+        .btn-reopen {
+            background: #262626;
+            color: white;
+            border: 1px solid #333;
+            padding: 0.4rem 1rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .btn-reopen:hover {
+            background: #333;
+        }
+
+        /* --- Security Gateway Styles --- */
+        #security-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: all 0.5s ease;
+        }
+
+        #security-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+            visibility: hidden;
+        }
+
+        .login-card {
+            background: rgba(20, 20, 20, 0.8);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            border-radius: 24px;
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            transform: translateY(0);
+            transition: transform 0.5s ease;
+        }
+
+        .login-icon {
+            font-size: 3.5rem;
+            color: var(--brand-volt);
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 15px rgba(204, 255, 0, 0.5));
+        }
+
+        .login-card h2 {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+        }
+
+        .login-card p {
+            color: #888;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .password-input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .password-input-group input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+            color: white;
+            padding: 1rem 1.2rem;
+            border-radius: 12px;
+            font-family: var(--font-main);
+            font-size: 1.2rem;
+            text-align: center;
+            letter-spacing: 5px;
+            transition: all 0.3s;
+        }
+
+        .password-input-group input:focus {
+            border-color: var(--brand-volt);
+            outline: none;
+            box-shadow: 0 0 20px rgba(204, 255, 0, 0.2);
+            background: #000;
+        }
+
+        .btn-access {
+            width: 100%;
+            background: var(--brand-volt);
+            color: #000;
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 900;
+            font-size: 1rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(204, 255, 0, 0.3);
+        }
+
+        .btn-access:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(204, 255, 0, 0.5);
+            filter: brightness(1.1);
+        }
+
+        .auth-error {
+            color: #ef4444;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            font-weight: 700;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .auth-error.visible {
+            opacity: 1;
+        }
+
+        /* --- End Security Styles --- */
+    </style>
+</head>
+
+<body>
+
+    <!-- Security Gateway -->
+    <div id="security-overlay">
+        <div class="login-card">
+            <i class="fas fa-lock login-icon"></i>
+            <h2>ACCESO ADMIN</h2>
+            <p>Introduce la contraseña para continuar</p>
+
+            <div class="password-input-group">
+                <input type="password" id="adminPassword" placeholder="••••••" onkeypress="handleAuthKeyPress(event)">
+            </div>
+
+            <button class="btn-access" onclick="checkAdminAuth()">Acceder</button>
+            <div id="authError" class="auth-error">Contraseña incorrecta</div>
+        </div>
+    </div>
+
+    <script>
+        // Check session auth on load
+        const currentAuth = sessionStorage.getItem('somospadel_admin_auth');
+        if (currentAuth === 'JARABA' || currentAuth === 'PADELCOSCO21') {
+            document.getElementById('security-overlay').style.display = 'none';
+        }
+
+        function checkAdminAuth() {
+            const input = document.getElementById('adminPassword');
+            const error = document.getElementById('authError');
+            const overlay = document.getElementById('security-overlay');
+            const pass = input.value.trim().toUpperCase();
+
+            if (pass === 'JARABA' || pass === 'PADELCOSCO21') {
+                sessionStorage.setItem('somospadel_admin_auth', pass);
+                overlay.classList.add('hidden');
+                setTimeout(() => { overlay.style.display = 'none'; }, 500);
+            } else {
+                error.classList.add('visible');
+                input.value = '';
+                input.focus();
+                // Wobble effect
+                document.querySelector('.login-card').style.animation = 'none';
+                void document.querySelector('.login-card').offsetWidth;
+                document.querySelector('.login-card').style.animation = 'shake 0.5s';
+            }
+        }
+
+        function handleAuthKeyPress(e) {
+            if (e.key === 'Enter') checkAdminAuth();
+        }
+    </script>
+
+    <style>
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-10px);
+            }
+
+            75% {
+                transform: translateX(10px);
+            }
+        }
+    </style>
+
+    <header class="admin-header-bar">
+        <div class="admin-brand">ADMIN<span>PANEL</span></div>
+        <div class="admin-controls-group">
+            <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Volver al Dashboard</a>
+
+            <!-- STATIC SEARCH REMOVED (Now injected in Phase Nav) -->
+
+            <button onclick="toggleAdminSort()" id="btn-sort" class="action-btn btn-simular"
+                style="background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%); box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);">
+                <i class="fas fa-clock"></i> <span id="sort-text">Orden: ID</span>
+            </button>
+
+            <button onclick="simularGrupos()" class="action-btn btn-simular">
+                <i class="fas fa-dice"></i> Simular Grupos
+            </button>
+
+            <button onclick="forceSyncSchedule()" class="action-btn"
+                style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);">
+                <i class="fas fa-sync-alt"></i> Sincronizar Calendario
+            </button>
+
+            <button onclick="resetTotalScores()" class="action-btn btn-reset">
+                <i class="fas fa-trash-alt"></i> Reset Total
+            </button>
+        </div>
+    </header>
+
+    <!-- Admin Category Tabs -->
+    <div id="admin-categories" class="sub-nav admin-sub-nav">
+        <!-- Injected via JS -->
+    </div>
+
+    <div id="admin-matches-grid" class="admin-grid">
+        <!-- Matches injected here -->
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Init Admin Panel if loaded standalone
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof initAdmin === 'function') initAdmin();
+        });
+    </script>
+</body>
+
+</html>

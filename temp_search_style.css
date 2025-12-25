@@ -1,0 +1,6 @@
+/* Search Highlights */
+.search-highlight td {
+    color: var(--brand-volt) !important;
+    font-weight: 900;
+    text-shadow: 0 0 5px rgba(204, 255, 0, 0.3);
+}
