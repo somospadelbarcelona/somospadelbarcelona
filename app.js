@@ -10,7 +10,7 @@ window.onunhandledrejection = function (event) {
 };
 
 // --- CONFIGURATION ---
-const APP_VERSION = "2.1.0-OFFICIAL-SCHEDULE";
+const APP_VERSION = "2.2.0-CLOUD-SYNC-ACTIVE";
 console.log(`🚀 SOMOSPADEL Dashboard v${APP_VERSION} initialized.`);
 
 const RAW_TEAMS = {
@@ -205,8 +205,19 @@ function generateInitialData() {
 let tournamentData = (function () {
     try {
         const stored = localStorage.getItem('tournamentData');
+
+        // If we have BAKED_DATA (official sync), and NO local storage, use BAKED_DATA
+        if (typeof BAKED_DATA !== 'undefined' && !stored) {
+            console.log("📦 Using BAKED_DATA version for initial load.");
+            return BAKED_DATA;
+        }
+
         if (!stored) return null;
         const parsed = JSON.parse(stored);
+
+        // If we have BAKED_DATA and local storage exists, but it's very old/missing fields, maybe upgrade?
+        // For now, we favor stored user edits once they exist.
+
         if (parsed && parsed.matches && parsed.matches.every(m => m.stage)) return parsed; // Already new format
         if (parsed && parsed.matches && parsed.matches.some(m => !m.stage)) return null; // Old format
         return parsed;
@@ -285,10 +296,39 @@ let activeAdminSort = 'id'; // 'id' or 'time'
 
 // Save function with timestamp for auto-refresh
 function saveState() {
-    localStorage.setItem('tournamentData', JSON.stringify(tournamentData));
+    const dataStr = JSON.stringify(tournamentData);
+    localStorage.setItem('tournamentData', dataStr);
     localStorage.setItem('dataTimestamp', Date.now().toString());
+
+    // PUSH TO FIREBASE (Real-time Cloud Sync)
+    if (window.isFirebaseActive && window.db) {
+        window.db.ref('tournament_state').set(tournamentData)
+            .catch(err => console.error("Firebase Push Error:", err));
+    }
     renderTicker(); // Update ticker when data changes
     updateHeaderStats(); // Update header stats
+}
+
+function syncWithFirebase() {
+    if (!window.isFirebaseActive || !window.db) return;
+
+    console.log("📡 Initializing Cloud Listener...");
+    window.db.ref('tournament_state').on('value', (snapshot) => {
+        const cloudData = snapshot.val();
+        if (cloudData) {
+            console.log("☁️ Cloud Update Received!");
+            tournamentData = cloudData;
+
+            // Re-render everything
+            renderStandings();
+            renderMatches();
+            renderBrackets();
+            renderTicker();
+
+            // If in admin, re-render admin too
+            if (typeof initAdmin === 'function') initAdmin();
+        }
+    });
 }
 
 // Render results ticker
@@ -1103,6 +1143,21 @@ function resetTotalScores() {
     location.reload();
 }
 
+function exportData() {
+    const dataStr = JSON.stringify(tournamentData, null, 2);
+    const blob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `tournament_backup_${new Date().getTime()}.json`;
+    link.click();
+
+    // Also copy to clipboard for convenience
+    navigator.clipboard.writeText(dataStr).then(() => {
+        alert("✅ Datos copiados al portapapeles y descargados en un archivo JSON.\n\nPégamelos aquí para que yo pueda 'grabarlos' permanentemente en el código.");
+    });
+}
+
 // --- DASHBOARD BRACKETS ---
 
 function renderBrackets() {
@@ -1300,6 +1355,7 @@ window.initAdmin = initAdmin;
 window.editTeamName = editTeamName;
 window.editMatchDetail = editMatchDetail;
 window.forceSyncSchedule = forceSyncSchedule;
+window.exportData = exportData;
 window.navigateToMatch = navigateToMatch;
 window.renderTicker = renderTicker;
 window.scrollSponsors = scrollSponsors;
@@ -1356,8 +1412,12 @@ function startAutoRefresh() {
 // Helper global for init (if standalone)
 if (typeof document !== 'undefined') {
     document.addEventListener('DOMContentLoaded', () => {
-        init();
+        if (typeof init === 'function') init();
         if (typeof initAdmin === 'function') initAdmin();
+
+        // --- FIREBASE SYNC ---
+        syncWithFirebase();
+
         startAutoRefresh(); // Start auto-refresh polling
     });
 }
