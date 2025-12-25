@@ -296,6 +296,9 @@ let activeAdminSort = 'id'; // 'id' or 'time'
 // Save function with timestamp for auto-refresh
 function saveState() {
     return new Promise((resolve, reject) => {
+        // Ejecutar cálculos antes de guardar
+        if (typeof updatePlayoffCalculations === 'function') updatePlayoffCalculations();
+
         const dataStr = JSON.stringify(tournamentData);
         localStorage.setItem('tournamentData', dataStr);
         localStorage.setItem('dataTimestamp', Date.now().toString());
@@ -319,8 +322,11 @@ function saveState() {
         } else {
             resolve(); // No Firebase, resolve anyway
         }
-        renderTicker();
-        updateHeaderStats();
+
+        // Actualizar UI
+        if (typeof renderTicker === 'function') renderTicker();
+        if (typeof updateHeaderStats === 'function') updateHeaderStats();
+        if (typeof updateUI === 'function') updateUI();
     });
 }
 
@@ -408,10 +414,14 @@ function syncWithFirebase() {
             if (typeof initAdmin === 'function') initAdmin();
         } else {
             console.warn("⚠️ La ruta 'tournament_state' está vacía en Firebase.");
-            // Si está vacía, subimos los datos actuales por primera vez si somos admin
+            // Si está vacía, avisamos al admin
             if (window.location.pathname.includes('admin.html')) {
-                console.log("📤 Inicializando base de datos con datos locales...");
-                saveState();
+                console.log("💡 Sugiriendo inicialización al Admin...");
+                // Solo avisamos una vez por sesión
+                if (!sessionStorage.getItem('sync_warning_shown')) {
+                    alert("☁️ LA NUBE ESTÁ VACÍA: Pulsa el botón azul 'Forzar Sincro Nube' para subir los datos del torneo por primera vez.");
+                    sessionStorage.setItem('sync_warning_shown', 'true');
+                }
             }
         }
     }, (error) => {
@@ -599,12 +609,6 @@ function getStandings(category, group) {
         if (b.points !== a.points) return b.points - a.points;
         return b.diff - a.diff;
     });
-}
-
-function saveState() {
-    updatePlayoffCalculations();
-    localStorage.setItem('tournamentData', JSON.stringify(tournamentData));
-    updateUI();
 }
 
 function updatePlayoffCalculations() {
