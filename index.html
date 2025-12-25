@@ -17,6 +17,28 @@
 </head>
 
 <body>
+    <!-- Firebase App (necesario) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<!-- Firebase Realtime Database -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<script>
+  // Configuración de tu Firebase
+  const firebaseConfig = {
+    apiKey: "TU_API_KEY",
+    authDomain: "somospadelbarcelona-5def2.firebaseapp.com",
+    databaseURL: "https://somospadelbarcelona-5def2-default-rtdb.europe-west1.firebasedatabase.app/",
+    projectId: "somospadelbarcelona-5def2",
+    storageBucket: "somospadelbarcelona-5def2.appspot.com",
+    messagingSenderId: "TU_MESSAGING_ID",
+    appId: "TU_APP_ID"
+  };
+
+  // Inicializar Firebase
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+</script>
+
     <!-- Header -->
     <header class="main-header">
         <div class="header-brand">
@@ -459,5 +481,6 @@
     <script src="baked_data.js"></script>
     <script src="app.js"></script>
 </body>
+
 
 </html>
