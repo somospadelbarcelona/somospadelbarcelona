@@ -3,7 +3,7 @@
 const firebaseConfig = {
     apiKey: "AIzaSyDYeT0NirzCvUZuypXWto8Dlwyy5gAsVQE",
     authDomain: "somospadelbarcelona-5def2.firebaseapp.com",
-    databaseURL: "https://somospadelbarcelona-5def2-default-rtdb.firebaseio.com",
+    databaseURL: "https://somospadelbarcelona-5def2-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "somospadelbarcelona-5def2",
     storageBucket: "somospadelbarcelona-5def2.firebasestorage.app",
     messagingSenderId: "486590022834",

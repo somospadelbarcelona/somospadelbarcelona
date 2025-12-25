@@ -309,6 +309,28 @@ function saveState() {
     updateHeaderStats(); // Update header stats
 }
 
+// FUNCIÓN PARA GUARDAR RESULTADO ESPECÍFICO (Solicitada por usuario)
+function saveMatchResult(matchName, resultado) {
+    if (!matchName || resultado === undefined) return;
+
+    // 1. Actualizar en el estado local (tournamentData)
+    const match = tournamentData.matches.find(m => m.matchName === matchName);
+    if (match) {
+        const scores = resultado.split('-').map(s => s.trim());
+        match.scoreA = parseInt(scores[0]) || 0;
+        match.scoreB = parseInt(scores[1]) || 0;
+        match.status = 'finished';
+        saveState();
+    }
+
+    // 2. Guardar en Firebase bajo la ruta específica solicitada
+    if (window.isFirebaseActive && window.db) {
+        window.db.ref('tournament_state/' + matchName).set(resultado)
+            .then(() => console.log(`✓ Resultado de "${matchName}" guardado en Firebase.`))
+            .catch(err => console.error("Error guardando resultado:", err));
+    }
+}
+
 function syncWithFirebase() {
     if (!window.isFirebaseActive || !window.db) return;
 
@@ -1356,6 +1378,7 @@ window.editTeamName = editTeamName;
 window.editMatchDetail = editMatchDetail;
 window.forceSyncSchedule = forceSyncSchedule;
 window.exportData = exportData;
+window.saveMatchResult = saveMatchResult;
 window.navigateToMatch = navigateToMatch;
 window.renderTicker = renderTicker;
 window.scrollSponsors = scrollSponsors;
