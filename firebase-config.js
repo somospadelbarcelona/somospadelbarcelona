@@ -18,9 +18,9 @@ window.isFirebaseActive = false;
 if (firebaseConfig.apiKey !== "TU_API_KEY") {
     try {
         firebase.initializeApp(firebaseConfig);
-        window.db = firebase.database();
+        window.db = firebase.app().database(firebaseConfig.databaseURL);
         window.isFirebaseActive = true;
-        console.log("🔥 Firebase Live Sync: ACTIVADO");
+        console.log("🔥 Firebase Live Sync: ACTIVADO (" + firebaseConfig.databaseURL + ")");
     } catch (err) {
         console.error("❌ Error inicializando Firebase:", err);
     }

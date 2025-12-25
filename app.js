@@ -348,38 +348,40 @@ function syncWithFirebase() {
     }
 
     // Indicador visual de conexión
-    const updateStatus = (status) => {
+    const updateStatus = (status, details = '') => {
         const indicator = document.getElementById('cloud-status-indicator');
         if (indicator) {
             if (status === 'online') {
                 indicator.innerHTML = '<i class="fas fa-cloud" style="color:#22c55e;"></i> ONLINE';
                 indicator.style.borderColor = 'rgba(34, 197, 94, 0.4)';
             } else if (status === 'offline') {
-                indicator.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:#ef4444;"></i> OFFLINE';
+                indicator.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#ef4444;"></i> OFFLINE ${details}`;
                 indicator.style.borderColor = 'rgba(239, 68, 68, 0.4)';
             } else {
-                indicator.innerHTML = '<i class="fas fa-cloud-sun" style="color:#f59e0b;"></i> CONNECTING...';
+                indicator.innerHTML = `<i class="fas fa-spinner fa-spin" style="color:#f59e0b;"></i> ${details || 'CONNECTING...'}`;
                 indicator.style.borderColor = 'rgba(245, 158, 11, 0.4)';
             }
         }
     };
 
-    updateStatus('connecting');
+    updateStatus('connecting', 'BUSCANDO SERVIDOR...');
     console.log("📡 Iniciando escucha de Firebase...");
 
     // 1. Detectar si hay conexión a la infraestructura de Firebase
     window.db.ref('.info/connected').on('value', (snap) => {
         if (snap.val() === true) {
             console.log("🟢 Conexión establecida con el servidor de Firebase.");
+            updateStatus('connecting', 'ESPERANDO DATOS...');
         } else {
             console.log("🔴 Conexión perdida con el servidor de Firebase.");
-            updateStatus('offline');
+            updateStatus('offline', '(RED)');
         }
     });
 
     // 2. Escuchar cambios en los datos
     window.db.ref('tournament_state').on('value', (snapshot) => {
         const cloudData = snapshot.val();
+        console.log("📦 Datos recibidos de la nube:", cloudData ? "SÍ" : "VACÍO");
         updateStatus('online');
 
         if (cloudData) {
