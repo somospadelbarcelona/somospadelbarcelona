@@ -334,22 +334,43 @@ function saveMatchResult(matchName, resultado) {
 function syncWithFirebase() {
     if (!window.isFirebaseActive || !window.db) return;
 
+    // Indicador visual de conexión (si existe elemento)
+    const updateStatus = (status) => {
+        const indicator = document.getElementById('cloud-status-indicator');
+        if (indicator) {
+            indicator.innerHTML = status === 'online'
+                ? '<i class="fas fa-cloud" style="color:#22c55e;"></i> ONLINE'
+                : '<i class="fas fa-cloud-sun" style="color:#f59e0b;"></i> CONNECTING...';
+        }
+    };
+
+    updateStatus('connecting');
     console.log("📡 Initializing Cloud Listener...");
+
     window.db.ref('tournament_state').on('value', (snapshot) => {
         const cloudData = snapshot.val();
+        updateStatus('online');
+
         if (cloudData) {
             console.log("☁️ Cloud Update Received!");
+            // IMPORTANTE: Sobrescribir datos locales con los de la nube
             tournamentData = cloudData;
+            localStorage.setItem('tournamentData', JSON.stringify(tournamentData));
 
             // Re-render everything
-            renderStandings();
-            renderMatches();
-            renderBrackets();
-            renderTicker();
+            if (typeof renderStandings === 'function') renderStandings();
+            if (typeof renderMatches === 'function') renderMatches();
+            if (typeof renderBrackets === 'function') renderBrackets();
+            if (typeof renderTicker === 'function') renderTicker();
+            if (typeof updateHeaderStats === 'function') updateHeaderStats();
+            if (typeof renderLiveFeed === 'function') renderLiveFeed();
 
             // If in admin, re-render admin too
             if (typeof initAdmin === 'function') initAdmin();
         }
+    }, (error) => {
+        console.error("Firebase Sync Error:", error);
+        updateStatus('error');
     });
 }
 
