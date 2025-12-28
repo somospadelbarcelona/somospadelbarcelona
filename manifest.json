@@ -1,6 +1,6 @@
 {
-    "name": "TORNEO SOMOSPADEL",
-    "short_name": "SOMOSPADEL",
+    "name": "Torneo somospadel BCN",
+    "short_name": "somospadel BCN",
     "name_en": "SOMOSPADEL TOURNAMENT",
     "description": "Dashboard oficial de resultados en tiempo real del Torneo SOMOSPADEL",
     "start_url": "./index.html",
