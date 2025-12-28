@@ -289,6 +289,35 @@
             background: #333;
         }
 
+        /* --- Phase & Category Navigation --- */
+        .admin-phase-nav {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 0 2rem 2rem 2rem;
+        }
+
+        .active-orange {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4) !important;
+        }
+
+        .phase-playoff {
+            border-bottom: 2px solid #ea580c !important;
+        }
+
+        .admin-sub-nav {
+            margin-bottom: 2rem;
+            padding: 0 2rem;
+        }
+
+        /* --- Search Container --- */
+        .admin-search-container {
+            position: relative;
+        }
+
         /* --- Security Gateway Styles --- */
         #security-overlay {
             position: fixed;
@@ -491,6 +520,11 @@
                 <i class="fas fa-clock"></i> <span id="sort-text">Orden: ID</span>
             </button>
 
+            <button onclick="toggleScheduleEditor()" class="action-btn"
+                style="background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%); box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);">
+                <i class="fas fa-calendar-edit"></i> Editor de Programación
+            </button>
+
             <button onclick="simularGrupos()" class="action-btn btn-simular">
                 <i class="fas fa-dice"></i> Simular Grupos
             </button>
@@ -527,6 +561,18 @@
         <!-- Matches injected here -->
     </div>
 
+    <!-- Admin Schedule Editor (Overlay Grid) -->
+    <div id="admin-schedule-editor" class="tab-content schedule-tab" style="display: none; padding-top: 2rem;">
+        <div class="schedule-header-premium">
+            <h2 class="category-header"><i class="fas fa-calendar-alt"></i> EDITOR DE PROGRAMACIÓN</h2>
+            <p style="color: #888; margin-top: -1rem; margin-bottom: 1rem;">Haz clic en un partido para cambiar su
+                horario o pista.</p>
+        </div>
+        <div id="admin-schedule-grid-container" class="schedule-grid-container">
+            <!-- Grid injected via JS -->
+        </div>
+    </div>
+
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -536,8 +582,8 @@
 
     <script src="firebase-config.js"></script>
 
-    <script src="baked_data.js?v=225"></script>
-    <script src="app.js?v=225"></script>
+    <script src="baked_data.js?v=300"></script>
+    <script src="app.js?v=300"></script>
     <script>
         // Init Admin Panel if loaded standalone
         document.addEventListener('DOMContentLoaded', () => {

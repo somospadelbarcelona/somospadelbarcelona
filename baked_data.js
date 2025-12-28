@@ -2,8 +2,8 @@ const BAKED_DATA = {
     "matches": [
         {
             "id": 1,
-            "teamA": "Juanma Leon / Raquel Fdez",
-            "teamB": "David Asen / Anais",
+            "teamA": "Juanma Leon / Raquel Fernandez",
+            "teamB": "David Asensio / Anais",
             "scoreA": 2,
             "scoreB": 3,
             "court": "Pista 2",
@@ -16,7 +16,7 @@ const BAKED_DATA = {
         {
             "id": 2,
             "teamA": "Paula / Jose Luis Berga",
-            "teamB": "Alex C / Pili Jor",
+            "teamB": "Alex Cuadra / Pili Jorques",
             "scoreA": 2,
             "scoreB": 6,
             "court": "Pista 3",
@@ -28,7 +28,7 @@ const BAKED_DATA = {
         },
         {
             "id": 3,
-            "teamA": "Juanma Leon / Raquel Fdez",
+            "teamA": "Juanma Leon / Raquel Fernandez",
             "teamB": "Paula / Jose Luis Berga",
             "scoreA": 2,
             "scoreB": 1,
@@ -41,8 +41,8 @@ const BAKED_DATA = {
         },
         {
             "id": 4,
-            "teamA": "David Asen / Anais",
-            "teamB": "Alex C / Pili Jor",
+            "teamA": "David Asensio / Anais",
+            "teamB": "Alex Cuadra / Pili Jorques",
             "scoreA": 1,
             "scoreB": 5,
             "court": "Pista 3",
@@ -54,8 +54,8 @@ const BAKED_DATA = {
         },
         {
             "id": 5,
-            "teamA": "Juanma Leon / Raquel Fdez",
-            "teamB": "Alex C / Pili Jor",
+            "teamA": "Juanma Leon / Raquel Fernandez",
+            "teamB": "Alex Cuadra / Pili Jorques",
             "scoreA": 3,
             "scoreB": 1,
             "court": "Pista 2",
@@ -67,7 +67,7 @@ const BAKED_DATA = {
         },
         {
             "id": 6,
-            "teamA": "David Asen / Anais",
+            "teamA": "David Asensio / Anais",
             "teamB": "Paula / Jose Luis Berga",
             "scoreA": 3,
             "scoreB": 4,
@@ -250,7 +250,7 @@ const BAKED_DATA = {
         {
             "id": 20,
             "teamA": "Luis Pino / Raquel Perez",
-            "teamB": "Fernando / Sobrina Fernando",
+            "teamB": "Fernando Garcia / Paz Lorezo",
             "scoreA": 4,
             "scoreB": 2,
             "court": "Pista 10",
@@ -276,7 +276,7 @@ const BAKED_DATA = {
         {
             "id": 22,
             "teamA": "Coral / Ismael",
-            "teamB": "Fernando / Sobrina Fernando",
+            "teamB": "Fernando Garcia / Paz Lorezo",
             "scoreA": 4,
             "scoreB": 2,
             "court": "Pista 10",
@@ -289,7 +289,7 @@ const BAKED_DATA = {
         {
             "id": 23,
             "teamA": "Marta Murigaren / Jorge Rueda",
-            "teamB": "Fernando / Sobrina Fernando",
+            "teamB": "Fernando Garcia / Paz Lorezo",
             "scoreA": 6,
             "scoreB": 3,
             "court": "Pista 9",
@@ -315,7 +315,7 @@ const BAKED_DATA = {
         {
             "id": 1024,
             "matchName": "Cuartos 1",
-            "teamA": "Alex C / Pili Jor",
+            "teamA": "Alex Cuadra / Pili Jorques",
             "teamB": "Marta Murigaren / Jorge Rueda",
             "scoreA": null,
             "scoreB": null,
@@ -323,7 +323,7 @@ const BAKED_DATA = {
             "stage": "quarter",
             "category": "4ª Mixta",
             "time": "16:30",
-            "court": "Pista ?"
+            "court": "Pista 1"
         },
         {
             "id": 1025,
@@ -336,7 +336,7 @@ const BAKED_DATA = {
             "stage": "quarter",
             "category": "4ª Mixta",
             "time": "16:30",
-            "court": "Pista ?"
+            "court": "Pista 4"
         },
         {
             "id": 1026,
@@ -349,20 +349,20 @@ const BAKED_DATA = {
             "stage": "quarter",
             "category": "4ª Mixta",
             "time": "16:30",
-            "court": "Pista ?"
+            "court": "Pista 7"
         },
         {
             "id": 1027,
             "matchName": "Cuartos 4",
             "teamA": "Luis Pino / Raquel Perez",
-            "teamB": "Juanma Leon / Raquel Fdez",
+            "teamB": "Juanma Leon / Raquel Fernandez",
             "scoreA": null,
             "scoreB": null,
             "status": "pending",
             "stage": "quarter",
             "category": "4ª Mixta",
             "time": "16:30",
-            "court": "Pista ?"
+            "court": "Pista 10"
         },
         {
             "id": 2028,
@@ -374,8 +374,8 @@ const BAKED_DATA = {
             "status": "pending",
             "stage": "semi",
             "category": "4ª Mixta",
-            "time": "17:30",
-            "court": "Pista ?"
+            "time": "17:00",
+            "court": "Pista 1"
         },
         {
             "id": 2029,
@@ -387,8 +387,8 @@ const BAKED_DATA = {
             "status": "pending",
             "stage": "semi",
             "category": "4ª Mixta",
-            "time": "17:30",
-            "court": "Pista ?"
+            "time": "17:00",
+            "court": "Pista 4"
         },
         {
             "id": 3030,
@@ -400,7 +400,7 @@ const BAKED_DATA = {
             "status": "pending",
             "stage": "final",
             "category": "4ª Mixta",
-            "time": "18:30",
+            "time": "17:45",
             "court": "Pista 1"
         },
         {
@@ -418,7 +418,7 @@ const BAKED_DATA = {
         },
         {
             "id": 33,
-            "teamA": "Vlady / Bernat",
+            "teamA": "Vladimir Starciuc / Bernat",
             "teamB": "Juan Manuel / Fernando",
             "scoreA": 5,
             "scoreB": 2,
@@ -432,7 +432,7 @@ const BAKED_DATA = {
         {
             "id": 34,
             "teamA": "Sergio Albert / Joan Bernard",
-            "teamB": "Vlady / Bernat",
+            "teamB": "Vladimir Starciuc / Bernat",
             "scoreA": 5,
             "scoreB": 3,
             "court": "Pista 11",
@@ -471,7 +471,7 @@ const BAKED_DATA = {
         {
             "id": 37,
             "teamA": "Oscar Cosco / Javier Hita",
-            "teamB": "Vlady / Bernat",
+            "teamB": "Vladimir Starciuc / Bernat",
             "scoreA": 2,
             "scoreB": 3,
             "court": "Pista 12",
@@ -483,8 +483,8 @@ const BAKED_DATA = {
         },
         {
             "id": 38,
-            "teamA": "Adria Boza / Jugador 3MB",
-            "teamB": "Cristian Gallego / Amigo Cristian",
+            "teamA": "Adria Boza / Marc Pijuan",
+            "teamB": "Cristian Lasheras / Manu Sanhez",
             "scoreA": 2,
             "scoreB": 3,
             "court": "Pista 13",
@@ -496,8 +496,8 @@ const BAKED_DATA = {
         },
         {
             "id": 39,
-            "teamA": "Xavi Perea / Amigo Perea",
-            "teamB": "Daniel Astasio / Pareja Daniel",
+            "teamA": "Xavi Perea / Bryan Davila",
+            "teamB": "Dani Astasio / Marc Valldosera",
             "scoreA": 1,
             "scoreB": 3,
             "court": "Pista 14",
@@ -509,7 +509,7 @@ const BAKED_DATA = {
         },
         {
             "id": 40,
-            "teamA": "Adria Boza / Jugador 3MB",
+            "teamA": "Adria Boza / Marc Pijuan",
             "teamB": "Xavi Perea / Amigo Perea",
             "scoreA": 3,
             "scoreB": 5,
@@ -522,8 +522,8 @@ const BAKED_DATA = {
         },
         {
             "id": 41,
-            "teamA": "Cristian Gallego / Amigo Cristian",
-            "teamB": "Daniel Astasio / Pareja Daniel",
+            "teamA": "Cristian Lasheras / Manu Sanhez",
+            "teamB": "Dani Astasio / Marc Valldosera",
             "scoreA": 4,
             "scoreB": 3,
             "court": "Pista 14",
@@ -535,8 +535,8 @@ const BAKED_DATA = {
         },
         {
             "id": 42,
-            "teamA": "Adria Boza / Jugador 3MB",
-            "teamB": "Daniel Astasio / Pareja Daniel",
+            "teamA": "Adria Boza / Marc Pijuan",
+            "teamB": "Dani Astasio / Marc Valldosera",
             "scoreA": 4,
             "scoreB": 6,
             "court": "Pista 13",
@@ -548,7 +548,7 @@ const BAKED_DATA = {
         },
         {
             "id": 43,
-            "teamA": "Cristian Gallego / Amigo Cristian",
+            "teamA": "Cristian Lasheras / Manu Sanhez",
             "teamB": "Xavi Perea / Amigo Perea",
             "scoreA": 5,
             "scoreB": 4,
@@ -563,27 +563,27 @@ const BAKED_DATA = {
             "id": 4043,
             "matchName": "Semi 1",
             "teamA": "Sergio Albert / Joan Bernard",
-            "teamB": "Daniel Astasio / Pareja Daniel",
+            "teamB": "Dani Astasio / Marc Valldosera",
             "scoreA": null,
             "scoreB": null,
             "status": "pending",
             "stage": "semi",
             "category": "4ª Masculina",
             "time": "16:30",
-            "court": "Pista ?"
+            "court": "Pista 2"
         },
         {
             "id": 4044,
             "matchName": "Semi 2",
-            "teamA": "Cristian Gallego / Amigo Cristian",
-            "teamB": "Vlady / Bernat",
+            "teamA": "Cristian Lasheras / Manu Sanhez",
+            "teamB": "Vladimir Starciuc / Bernat",
             "scoreA": null,
             "scoreB": null,
             "status": "pending",
             "stage": "semi",
             "category": "4ª Masculina",
             "time": "16:30",
-            "court": "Pista ?"
+            "court": "Pista 5"
         },
         {
             "id": 5045,
@@ -595,8 +595,8 @@ const BAKED_DATA = {
             "status": "pending",
             "stage": "final",
             "category": "4ª Masculina",
-            "time": "17:30",
-            "court": "Pista 1"
+            "time": "17:15",
+            "court": "Pista 2"
         },
         {
             "id": 47,
@@ -614,7 +614,7 @@ const BAKED_DATA = {
         {
             "id": 48,
             "teamA": "Anna Polo / Anna Gaseni",
-            "teamB": "Noe / Pareja Noe",
+            "teamB": "Noelia Omaque / Laura Garcia",
             "scoreA": 2,
             "scoreB": 6,
             "court": "Pista 4",
@@ -640,7 +640,7 @@ const BAKED_DATA = {
         {
             "id": 50,
             "teamA": "Judith Esquerre / Judit Pinad",
-            "teamB": "Noe / Pareja Noe",
+            "teamB": "Noelia Omaque / Laura Garcia",
             "scoreA": 1,
             "scoreB": 2,
             "court": "Pista 4",
@@ -653,7 +653,7 @@ const BAKED_DATA = {
         {
             "id": 51,
             "teamA": "Cristina Matamala / Olga Ferer",
-            "teamB": "Noe / Pareja Noe",
+            "teamB": "Noelia Omaque / Laura Garcia",
             "scoreA": 6,
             "scoreB": 5,
             "court": "Pista 1",
@@ -678,8 +678,8 @@ const BAKED_DATA = {
         },
         {
             "id": 53,
-            "teamA": "Sandra Riera / Yolanda",
-            "teamB": "Gemma Sav / Mayte Vega",
+            "teamA": "Sandra Riera / Yolanda Sanz",
+            "teamB": "Gemma Saavedra / Mayte Vega",
             "scoreA": 1,
             "scoreB": 5,
             "court": "Pista 1",
@@ -691,8 +691,8 @@ const BAKED_DATA = {
         },
         {
             "id": 54,
-            "teamA": "Maria Lluisa / Pareja",
-            "teamB": "Berta / Andrea",
+            "teamA": "Maria Lluisa Benlloch / Enma Baijet",
+            "teamB": "Berta Canas / Andrea Vivancos",
             "scoreA": 2,
             "scoreB": 1,
             "court": "Pista 4",
@@ -704,8 +704,8 @@ const BAKED_DATA = {
         },
         {
             "id": 55,
-            "teamA": "Sandra Riera / Yolanda",
-            "teamB": "Maria Lluisa / Pareja",
+            "teamA": "Sandra Riera / Yolanda Sanz",
+            "teamB": "Maria Lluisa Benlloch / Pareja",
             "scoreA": 6,
             "scoreB": 3,
             "court": "Pista 1",
@@ -717,8 +717,8 @@ const BAKED_DATA = {
         },
         {
             "id": 56,
-            "teamA": "Gemma Sav / Mayte Vega",
-            "teamB": "Berta / Andrea",
+            "teamA": "Gemma Saavedra / Mayte Vega",
+            "teamB": "Berta Canas / Andrea Vivancos",
             "scoreA": 4,
             "scoreB": 2,
             "court": "Pista 4",
@@ -730,8 +730,8 @@ const BAKED_DATA = {
         },
         {
             "id": 57,
-            "teamA": "Sandra Riera / Yolanda",
-            "teamB": "Berta / Andrea",
+            "teamA": "Sandra Riera / Yolanda Sanz",
+            "teamB": "Berta Canas / Andrea Vivancos",
             "scoreA": 5,
             "scoreB": 6,
             "court": "Pista 1",
@@ -743,8 +743,8 @@ const BAKED_DATA = {
         },
         {
             "id": 58,
-            "teamA": "Gemma Sav / Mayte Vega",
-            "teamB": "Maria Lluisa / Pareja",
+            "teamA": "Gemma Saavedra / Mayte Vega",
+            "teamB": "Maria Lluisa Benlloch / Pareja",
             "scoreA": 2,
             "scoreB": 4,
             "court": "Pista 4",
@@ -843,12 +843,12 @@ const BAKED_DATA = {
             "stage": "quarter",
             "category": "4ª Femenina",
             "time": "16:30",
-            "court": "Pista ?"
+            "court": "Pista 3"
         },
         {
             "id": 1065,
             "matchName": "Cuartos 2",
-            "teamA": "Maria Lluisa / Pareja",
+            "teamA": "Maria Lluisa Benlloch / Enma Baijet",
             "teamB": "Marta Baijet / Mireia Peligros",
             "scoreA": null,
             "scoreB": null,
@@ -856,12 +856,12 @@ const BAKED_DATA = {
             "stage": "quarter",
             "category": "4ª Femenina",
             "time": "16:30",
-            "court": "Pista ?"
+            "court": "Pista 6"
         },
         {
             "id": 1066,
             "matchName": "Cuartos 3",
-            "teamA": "Gemma Sav / Mayte Vega",
+            "teamA": "Gemma Saavedra / Mayte Vega",
             "teamB": "3º Mejor (2)",
             "scoreA": null,
             "scoreB": null,
@@ -869,20 +869,20 @@ const BAKED_DATA = {
             "stage": "quarter",
             "category": "4ª Femenina",
             "time": "16:30",
-            "court": "Pista ?"
+            "court": "Pista 8"
         },
         {
             "id": 1067,
             "matchName": "Cuartos 4",
             "teamA": "Sheila Jodar / Greis Caballero",
-            "teamB": "Noe / Pareja Noe",
+            "teamB": "Noelia Omaque / Laura Garcia",
             "scoreA": null,
             "scoreB": null,
             "status": "pending",
             "stage": "quarter",
             "category": "4ª Femenina",
             "time": "16:30",
-            "court": "Pista ?"
+            "court": "Pista 9"
         },
         {
             "id": 2068,
@@ -894,8 +894,8 @@ const BAKED_DATA = {
             "status": "pending",
             "stage": "semi",
             "category": "4ª Femenina",
-            "time": "17:30",
-            "court": "Pista ?"
+            "time": "17:00",
+            "court": "Pista 3"
         },
         {
             "id": 2069,
@@ -907,8 +907,8 @@ const BAKED_DATA = {
             "status": "pending",
             "stage": "semi",
             "category": "4ª Femenina",
-            "time": "17:30",
-            "court": "Pista ?"
+            "time": "17:00",
+            "court": "Pista 6"
         },
         {
             "id": 3070,
@@ -920,12 +920,12 @@ const BAKED_DATA = {
             "status": "pending",
             "stage": "final",
             "category": "4ª Femenina",
-            "time": "18:30",
-            "court": "Pista 1"
+            "time": "17:45",
+            "court": "Pista 3"
         },
         {
             "id": 72,
-            "teamA": "Monica / Miki Muñoz",
+            "teamA": "Monica Muñoz / Miki Muñoz",
             "teamB": "David Navea / Ainhoa Navea",
             "scoreA": 2,
             "scoreB": 3,
@@ -938,7 +938,7 @@ const BAKED_DATA = {
         },
         {
             "id": 73,
-            "teamA": "Manuel / Zizi",
+            "teamA": "Manuel Gamero / Zizi",
             "teamB": "Maika / Josep Maria",
             "scoreA": 4,
             "scoreB": 6,
@@ -951,7 +951,7 @@ const BAKED_DATA = {
         },
         {
             "id": 74,
-            "teamA": "Monica / Miki Muñoz",
+            "teamA": "Monica Muñoz / Miki Muñoz",
             "teamB": "Manuel / Zizi",
             "scoreA": 2,
             "scoreB": 3,
@@ -977,7 +977,7 @@ const BAKED_DATA = {
         },
         {
             "id": 76,
-            "teamA": "Monica / Miki Muñoz",
+            "teamA": "Monica Muñoz / Miki Muñoz",
             "teamB": "Maika / Josep Maria",
             "scoreA": 1,
             "scoreB": 5,
@@ -1003,8 +1003,8 @@ const BAKED_DATA = {
         },
         {
             "id": 78,
-            "teamA": "Ronny / Carla",
-            "teamB": "Juanjo / Mariona",
+            "teamA": "Ronny Benalcazar / Carla Soto",
+            "teamB": "Juanjo Ruiz / Mariona",
             "scoreA": 2,
             "scoreB": 3,
             "court": "Pista 8",
@@ -1017,7 +1017,7 @@ const BAKED_DATA = {
         {
             "id": 79,
             "teamA": "Ramon / Lola",
-            "teamB": "Vane / Mario",
+            "teamB": "Olga Phyloma / Mario Sanz",
             "scoreA": 1,
             "scoreB": 3,
             "court": "Pista 9",
@@ -1030,7 +1030,7 @@ const BAKED_DATA = {
         {
             "id": 80,
             "teamA": "Ronny / Carla",
-            "teamB": "Ramon / Lola",
+            "teamB": "Ramon Mejias / Lola Caro",
             "scoreA": 1,
             "scoreB": 3,
             "court": "Pista 8",
@@ -1043,7 +1043,7 @@ const BAKED_DATA = {
         {
             "id": 81,
             "teamA": "Juanjo / Mariona",
-            "teamB": "Vane / Mario",
+            "teamB": "Olga Phyloma / Mario Sanz",
             "scoreA": 5,
             "scoreB": 1,
             "court": "Pista 9",
@@ -1056,7 +1056,7 @@ const BAKED_DATA = {
         {
             "id": 82,
             "teamA": "Ronny / Carla",
-            "teamB": "Vane / Mario",
+            "teamB": "Olga Phyloma / Mario Sanz",
             "scoreA": 3,
             "scoreB": 1,
             "court": "Pista 8",
@@ -1069,7 +1069,7 @@ const BAKED_DATA = {
         {
             "id": 83,
             "teamA": "Juanjo / Mariona",
-            "teamB": "Ramon / Lola",
+            "teamB": "Ramon Mejias / Lola Caro",
             "scoreA": 3,
             "scoreB": 1,
             "court": "Pista 9",
@@ -1089,8 +1089,8 @@ const BAKED_DATA = {
             "status": "pending",
             "stage": "semi",
             "category": "3ª Mixta",
-            "time": "16:30",
-            "court": "Pista ?"
+            "time": "17:00",
+            "court": "Pista 7"
         },
         {
             "id": 4084,
@@ -1102,8 +1102,8 @@ const BAKED_DATA = {
             "status": "pending",
             "stage": "semi",
             "category": "3ª Mixta",
-            "time": "16:30",
-            "court": "Pista ?"
+            "time": "17:00",
+            "court": "Pista 10"
         },
         {
             "id": 5085,
@@ -1115,13 +1115,13 @@ const BAKED_DATA = {
             "status": "pending",
             "stage": "final",
             "category": "3ª Mixta",
-            "time": "17:30",
-            "court": "Pista 1"
+            "time": "17:45",
+            "court": "Pista 5"
         },
         {
             "id": 87,
             "teamA": "Angel Millan / Albert Estrella",
-            "teamB": "Gerardo / Pablo Mena",
+            "teamB": "Gerardo Jaenes / Pablo Mena",
             "scoreA": 4,
             "scoreB": 2,
             "court": "Pista 11",
@@ -1133,8 +1133,8 @@ const BAKED_DATA = {
         },
         {
             "id": 88,
-            "teamA": "Sergio Serrano / Amigo Sergio",
-            "teamB": "Eloy / Ness",
+            "teamA": "Sergio Serrano / Fernando Gomez",
+            "teamB": "Eloy Arrabal / Ness Rodera",
             "scoreA": 2,
             "scoreB": 6,
             "court": "Pista 12",
@@ -1146,8 +1146,8 @@ const BAKED_DATA = {
         },
         {
             "id": 89,
-            "teamA": "Pareja 5A / Pareja 5B",
-            "teamB": "Pareja 6A / Pareja 6B",
+            "teamA": "Toni Palau / Carlos Asmadt",
+            "teamB": "Pablo Kellermann / Victor Iliana",
             "scoreA": 4,
             "scoreB": 6,
             "court": "Pista 13",
@@ -1157,10 +1157,11 @@ const BAKED_DATA = {
             "status": "finished",
             "stage": "group"
         },
+
         {
             "id": 90,
             "teamA": "Angel Millan / Albert Estrella",
-            "teamB": "Sergio Serrano / Amigo Sergio",
+            "teamB": "Sergio Serrano / Fernando Gomez",
             "scoreA": 4,
             "scoreB": 1,
             "court": "Pista 11",
@@ -1172,8 +1173,8 @@ const BAKED_DATA = {
         },
         {
             "id": 91,
-            "teamA": "Gerardo / Pablo Mena",
-            "teamB": "Pareja 5A / Pareja 5B",
+            "teamA": "Gerardo Jaenes / Pablo Mena",
+            "teamB": "Toni Palau / Carlos Asmadt",
             "scoreA": 3,
             "scoreB": 2,
             "court": "Pista 12",
@@ -1185,8 +1186,8 @@ const BAKED_DATA = {
         },
         {
             "id": 92,
-            "teamA": "Eloy / Ness",
-            "teamB": "Pareja 6A / Pareja 6B",
+            "teamA": "Eloy Arrabal / Ness Rodera",
+            "teamB": "Pablo Kellermann / Victor Iliana",
             "scoreA": 3,
             "scoreB": 5,
             "court": "Pista 13",
@@ -1196,10 +1197,11 @@ const BAKED_DATA = {
             "status": "finished",
             "stage": "group"
         },
+
         {
             "id": 93,
             "teamA": "Angel Millan / Albert Estrella",
-            "teamB": "Eloy / Ness",
+            "teamB": "Eloy Arrabal / Ness Rodera",
             "scoreA": 5,
             "scoreB": 3,
             "court": "Pista 11",
@@ -1211,8 +1213,8 @@ const BAKED_DATA = {
         },
         {
             "id": 94,
-            "teamA": "Gerardo / Pablo Mena",
-            "teamB": "Pareja 6A / Pareja 6B",
+            "teamA": "Gerardo Jaenes / Pablo Mena",
+            "teamB": "Pablo Kellermann / Victor Iliana",
             "scoreA": 5,
             "scoreB": 6,
             "court": "Pista 12",
@@ -1224,8 +1226,8 @@ const BAKED_DATA = {
         },
         {
             "id": 95,
-            "teamA": "Sergio Serrano / Amigo Sergio",
-            "teamB": "Pareja 5A / Pareja 5B",
+            "teamA": "Sergio Serrano / Fernando Gomez",
+            "teamB": "Toni Palau / Carlos Asmadt",
             "scoreA": 3,
             "scoreB": 1,
             "court": "Pista 13",
@@ -1235,32 +1237,34 @@ const BAKED_DATA = {
             "status": "finished",
             "stage": "group"
         },
+
         {
             "id": 4095,
             "matchName": "Semi 1",
             "teamA": "Angel Millan / Albert Estrella",
-            "teamB": "Gerardo / Pablo Mena",
+            "teamB": "Gerardo Jaenes / Pablo Mena",
             "scoreA": null,
             "scoreB": null,
             "status": "pending",
             "stage": "semi",
             "category": "3ª Masculina",
-            "time": "16:30",
-            "court": "Pista ?"
+            "time": "17:00",
+            "court": "Pista 8"
         },
         {
             "id": 4096,
             "matchName": "Semi 2",
-            "teamA": "Pareja 6A / Pareja 6B",
-            "teamB": "Eloy / Ness",
+            "teamA": "Pablo Kellermann / Victor Iliana",
+            "teamB": "Eloy Arrabal / Ness Rodera",
             "scoreA": null,
             "scoreB": null,
             "status": "pending",
             "stage": "semi",
             "category": "3ª Masculina",
-            "time": "16:30",
-            "court": "Pista ?"
+            "time": "17:00",
+            "court": "Pista 9"
         },
+
         {
             "id": 5097,
             "matchName": "Final",
@@ -1271,8 +1275,8 @@ const BAKED_DATA = {
             "status": "pending",
             "stage": "final",
             "category": "3ª Masculina",
-            "time": "17:30",
-            "court": "Pista 1"
+            "time": "17:45",
+            "court": "Pista 6"
         }
     ],
     "groups": [

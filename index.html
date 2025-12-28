@@ -2,8 +2,17 @@
 <html lang="es">
 
 <head>
+    <!-- PWA Settings -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#22c55e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SOMOSPADEL">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/color/192/000000/tennis.png">
+
+    <!-- Meta original -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SOMOSPADEL - Torneo Dashboard</title>
 
     <!-- Security Layer (Loaded First) -->
@@ -57,6 +66,7 @@
         <nav class="main-nav">
             <button class="nav-btn active" data-tab="standings">Clasificación</button>
             <button class="nav-btn" data-tab="matches">Partidos</button>
+            <button class="nav-btn" data-tab="schedule">Programación</button>
             <button class="nav-btn" data-tab="playoffs">Eliminatorias</button>
             <button class="nav-btn" data-tab="stats">Estadísticas</button>
             <button class="nav-btn" data-tab="rules">Normativa</button>
@@ -104,15 +114,16 @@
 
     <!-- Live Match Feed Panel -->
     <div class="live-feed-panel" id="liveFeedPanel" style="display: none;">
-        <div class="live-feed-header">
-            <i class="fas fa-broadcast-tower"></i>
-            <span>PARTIDOS EN VIVO</span>
-            <button class="close-feed" onclick="toggleLiveFeed()">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="live-feed-content" id="liveFeedContent">
-            <!-- Populated by JS -->
+        <div class="live-feed-wrapper">
+            <div class="live-feed-header">
+                <span><i class="fas fa-broadcast-tower"></i> PARTIDOS EN VIVO</span>
+                <button class="close-feed" onclick="toggleLiveFeed()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="live-feed-content" id="liveFeedContent">
+                <!-- Populated by JS -->
+            </div>
         </div>
     </div>
 
@@ -151,6 +162,31 @@
             </div>
             <div id="matches-container" class="matches-grid">
                 <!-- Matches injected here -->
+            </div>
+        </section>
+
+        <!-- Schedule Tab (Public Grid) -->
+        <section id="schedule-tab" class="tab-content" style="display: none;">
+            <div class="schedule-header-premium">
+                <h2 class="category-header"><i class="fas fa-calendar-alt"></i> PROGRAMACIÓN COMPLETA</h2>
+                <div class="schedule-legend">
+                    <span class="legend-item"><i class="fas fa-square" style="color: var(--cat-4fem);"></i> 4ª
+                        Fem</span>
+                    <span class="legend-item"><i class="fas fa-square" style="color: var(--cat-4mix);"></i> 4ª
+                        Mix</span>
+                    <span class="legend-item"><i class="fas fa-square" style="color: var(--cat-4masc);"></i> 4ª
+                        Masc</span>
+                    <span class="legend-item"><i class="fas fa-square" style="color: var(--cat-3mix);"></i> 3ª
+                        Mix</span>
+                    <span class="legend-item"><i class="fas fa-square" style="color: var(--cat-3masc);"></i> 3ª
+                        Masc</span>
+                </div>
+            </div>
+            <div id="schedule-grid-container" class="schedule-grid-container">
+                <!-- Grid will be injected via JS -->
+                <div class="schedule-loader">
+                    <i class="fas fa-spinner fa-spin"></i> Generando cuadrante...
+                </div>
             </div>
         </section>
 
@@ -501,68 +537,73 @@
     <style>
         /* Pro Ticker Design */
         .results-ticker {
+            background: var(--glass-heavy);
+            border-top: 2px solid var(--brand-volt);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            height: 60px;
+            display: flex;
+            align-items: center;
             position: fixed;
             bottom: 0;
+            left: 0;
             width: 100%;
-            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
-            z-index: 999;
-            border-top: 3px solid var(--brand-volt);
-            box-shadow: 0 -5px 30px rgba(204, 255, 0, 0.2);
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            z-index: 9999;
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
         }
 
         .ticker-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.8rem 2rem;
-            background: rgba(204, 255, 0, 0.1);
-            border-bottom: 1px solid rgba(204, 255, 0, 0.3);
-        }
-
-        .ticker-badge {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
             background: var(--brand-volt);
             color: black;
-            padding: 0.5rem 1.2rem;
-            border-radius: 20px;
-            font-weight: 900;
-            font-size: 0.85rem;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            box-shadow: 0 4px 15px rgba(204, 255, 0, 0.4);
-            animation: badge-pulse 2s ease-in-out infinite;
+            height: 100%;
+            padding: 0 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 950;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            z-index: 10;
+            position: relative;
+            box-shadow: 10px 0 30px rgba(204, 255, 0, 0.4);
+            clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);
+            animation: header-glitch 5s infinite;
         }
 
-        @keyframes badge-pulse {
+        @keyframes header-glitch {
 
             0%,
+            90%,
             100% {
-                transform: scale(1);
-                box-shadow: 0 4px 15px rgba(204, 255, 0, 0.4);
+                transform: skew(0deg);
             }
 
-            50% {
-                transform: scale(1.05);
-                box-shadow: 0 6px 25px rgba(204, 255, 0, 0.6);
+            92% {
+                transform: skew(5deg);
+                opacity: 0.8;
+            }
+
+            94% {
+                transform: skew(-5deg);
+                opacity: 0.9;
             }
         }
 
-        .ticker-badge i {
-            font-size: 1rem;
-            animation: bolt-flash 1.5s ease-in-out infinite;
+        .ticker-header i {
+            font-size: 1.1rem;
+            animation: pulse-icon 1s infinite alternate;
         }
 
-        @keyframes bolt-flash {
+        @keyframes pulse-icon {
+            from {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
 
-            0%,
-            100% {
+            to {
                 opacity: 1;
-            }
-
-            50% {
-                opacity: 0.6;
+                transform: scale(1.1);
             }
         }
 
@@ -571,71 +612,132 @@
             align-items: center;
             gap: 0.5rem;
             color: #22c55e;
-            font-weight: 700;
-            font-size: 0.75rem;
+            font-weight: 800;
+            font-size: 0.7rem;
             letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .live-dot-ticker {
-            width: 8px;
-            height: 8px;
-            background: #22c55e;
-            border-radius: 50%;
-            animation: pulse-live 1.5s ease-in-out infinite;
         }
 
         .ticker-content-wrapper {
             overflow: hidden;
             background: #000;
+            position: relative;
+        }
+
+        /* Subtle Scanline Effect */
+        .ticker-content-wrapper::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15) 0px, transparent 1px, transparent 2px);
+            pointer-events: none;
+            z-index: 2;
         }
 
         .ticker-content {
             display: flex;
             align-items: center;
-            animation: scroll-ticker 40s linear infinite;
+            animation: scroll-ticker 120s linear infinite;
             padding: 0.8rem 0;
+            gap: 40px;
+            /* Spacing between items */
+        }
+
+        .ticker-content:hover {
+            animation-play-state: paused;
         }
 
         .ticker-results {
             display: flex;
-            gap: 4rem;
+            gap: 2rem;
             padding: 0 2rem;
         }
 
         .ticker-item {
-            cursor: pointer;
-            transition: all 0.3s;
-            padding: 0.4rem 1rem;
-            border-radius: 8px;
+            display: flex;
+            align-items: center;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            white-space: nowrap;
+            border-radius: 6px;
+            padding: 0.4rem 1rem;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
         }
 
         .ticker-item:hover {
-            background: rgba(204, 255, 0, 0.15);
             border-color: var(--brand-volt);
+            background: rgba(204, 255, 0, 0.1);
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(204, 255, 0, 0.3);
         }
 
-        .ticker-score {
+        .ticker-cat-tag {
+            font-size: 0.6rem;
             font-weight: 900;
-            font-size: 1.2em;
-            margin: 0 0.5rem;
-            color: var(--brand-volt);
-            text-shadow: 0 0 10px rgba(204, 255, 0, 0.5);
+            text-transform: uppercase;
+            padding: 2px 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            white-space: nowrap;
+        }
+
+        .ticker-cat-3a-masculina .ticker-cat-tag {
+            background: var(--cat-3masc);
+            color: white;
+        }
+
+        .ticker-match-content {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            white-space: nowrap;
+        }
+
+        .ticker-team {
+            font-weight: 700;
+            font-size: 0.9rem;
         }
 
         .ticker-winner {
-            color: #22c55e;
-            font-weight: 700;
+            color: #fff;
         }
 
         .ticker-loser {
-            color: #888;
-            opacity: 0.8;
+            color: #666;
+        }
+
+        .ticker-score {
+            font-family: var(--font-nums);
+            font-weight: 900;
+            color: var(--brand-volt);
+            font-size: 1.1rem;
+            padding: 0 0.5rem;
+            text-shadow: 0 0 10px rgba(204, 255, 0, 0.3);
+        }
+
+        .ticker-status-next {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--brand-volt);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.6rem;
+            margin-left: 8px;
+            border: 1px solid rgba(204, 255, 0, 0.2);
+        }
+
+        @keyframes neon-pulse {
+            from {
+                text-shadow: 0 0 5px #fff, 0 0 10px var(--brand-volt), 0 0 20px var(--brand-volt);
+            }
+
+            to {
+                text-shadow: 0 0 2px #fff, 0 0 5px #00f2ff, 0 0 10px #00f2ff;
+            }
         }
 
         @keyframes scroll-ticker {
@@ -646,6 +748,24 @@
             100% {
                 transform: translateX(-50%);
             }
+        }
+
+        /* Billboard Fix */
+        .ticker-content {
+            display: flex;
+            width: max-content !important;
+            animation: scroll-ticker 120s linear infinite;
+            /* Much slower for readability */
+        }
+
+        .ticker-results {
+            display: flex;
+            align-items: center;
+        }
+
+        .live-broadcast-indicator span {
+            color: #ff3b30;
+            /* Red live dot */
         }
     </style>
 
@@ -662,9 +782,18 @@
     <script src="ai-predictor.js"></script>
     <script src="stats-integration.js"></script>
 
-    <script src="baked_data.js?v=225"></script>
-    <script src="app.js?v=225"></script>
+    <script src="baked_data.js?v=300"></script>
+    <script src="app.js?v=300"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js');
+            });
+        }
+    </script>
 </body>
+
+</html>
 
 
 </html>

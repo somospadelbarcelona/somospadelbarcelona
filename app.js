@@ -13,27 +13,27 @@ const APP_VERSION = "2.2.1-FORCE-SYNC"; // Cache Buster
 console.log(`🚀 SOMOSPADEL Dashboard v${APP_VERSION} inicializado.`);
 
 const RAW_TEAMS = {
-    "4ª Mixta": {
-        "A": ["Juanma Leon", "Raquel Fdez", "David Asen", "Anais", "Paula", "Jose Luis Berga", "Alex C", "Pili Jor"],
-        "B": ["Toni M", "Sonia", "Kevin", "Lorena", "Joaquim Salvat", "Monica", "Javier Frauca", "Natalia"],
-        "C": ["Sonia", "Miguel", "Carlota", "Jordi Seuba", "Enrique F", "Annabel", "Cristina", "Carlos"],
-        "D": ["Marta Murigaren", "Jorge Rueda", "Coral", "Ismael", "Luis Pino", "Raquel Perez", "Fernando", "Sobrina Fernando"]
-    },
-    "4ª Masculina": {
-        "A": ["Sergio Albert", "Joan Bernard", "Oscar Cosco", "Javier Hita", "Vlady", "Bernat", "Juan Manuel", "Fernando"],
-        "B": ["Adria Boza", "Jugador 3MB", "Cristian Gallego", "Amigo Cristian", "Xavi Perea", "Amigo Perea", "Daniel Astasio", "Pareja Daniel"]
-    },
     "4ª Femenina": {
-        "A": ["Cristina Matamala", "Olga Ferer", "Judith Esquerre", "Judit Pinad", "Anna Polo", "Anna Gaseni", "Noe", "Pareja Noe"],
-        "B": ["Sandra Riera", "Yolanda", "Gemma Sav", "Mayte Vega", "Maria Lluisa", "Pareja", "Berta", "Andrea"],
-        "C": ["Yoana Martinez", "Andrea Baraja", "Marta Bassons", "Joana", "Sheila Jodar", "Greis Caballero", "Marta Baijet", "Mireia Peligros"]
-    },
-    "3ª Mixta": {
-        "A": ["Monica", "Miki Muñoz", "David Navea", "Ainhoa Navea", "Manuel", "Zizi", "Maika", "Josep Maria"],
-        "B": ["Ronny", "Carla", "Juanjo", "Mariona", "Ramon", "Lola", "Vane", "Mario"]
+        "A": ["Cristina Matamala", "Olga Ferer", "Judith Esquerre", "Judit Pinad", "Anna Polo", "Anna Gaseni", "Noelia Omaque", "Laura Garcia"],
+        "B": ["Sandra Riera", "Yolanda Sanz", "Gemma Saavedra", "Mayte Vega", "Maria Lluisa Benlloch", "Enma Baijet", "Berta Canas", "Andrea Vivancos"],
+        "C": ["Yoana Martinez", "Andrea Baraja", "Marta Bassons", "Joana Garcia", "Sheila Jodar", "Greis Caballero", "Marta Baijet", "Mireia Peligros"]
     },
     "3ª Masculina": {
-        "A": ["Angel Millan", "Albert Estrella", "Gerardo", "Pablo Mena", "Sergio Serrano", "Amigo Sergio", "Eloy", "Ness", "Pareja por Confirmar", "Número 5", "Pareja por Confirmar", "Número 6"]
+        "A": ["Angel Millan", "Albert Estrella", "Gerardo Jaenes", "Pablo Mena", "Sergio Serrano", "Fernando Gomez", "Eloy Arrabal", "Ness Rodera", "Toni Palau", "Carlos Asmadt", "Pablo Kellermann", "Victor Iliana"]
+    },
+    "4ª Masculina": {
+        "A": ["Sergio Albert", "Joan Bernard", "Oscar Cosco", "Javier Hita", "Vladimir Starciuc", "Bernat Pecharoman", "Juan Manuel Lopez", "Fernando Rodriguez"],
+        "B": ["Adria Boza", "Marc Pijuan", "Cristian Lasheras", "Manu Sanhez", "Xavi Perea", "Bryan Davila", "Dani Astasio", "Marc Valldosera"]
+    },
+    "3ª Mixta": {
+        "A": ["Monica Muñoz", "Miki Muñoz", "David Navea", "Ainhoa Navea", "Manuel Gamero", "Zizi", "Maika", "Josep Maria"],
+        "B": ["Ronny Benalcazar", "Carla Soto", "Juanjo Ruiz", "Mariona", "Ramon Mejias", "Lola Caro", "Olga Phyloma", "Mario Sanz"]
+    },
+    "4ª Mixta": {
+        "A": ["Juanma Leon", "Raquel Fernandez", "David Asensio", "Anais Grebot", "Paula Alves", "Jose Luis Berga", "Alex Cuadra", "Pili Jorques"],
+        "B": ["Toni M", "Sonia", "Kevin", "Lorena", "Joaquim Salvat", "Monica", "Javier Frauca", "Natalia"],
+        "C": ["Abel Francesc", "Edith Alvarez", "Carlota Calabuig", "Jordi Seuba", "Enrique Fontoba", "Annabel Delgado", "Cristina Vidal", "Carlos Calasanz"],
+        "D": ["Marta Murigaren", "Jorge Rueda", "Coral Nova", "Ismael", "Luis Pino", "Raquel Perez", "Fernando Garcia", "Paz Lorezo"]
     }
 };
 
@@ -150,53 +150,78 @@ function generateInitialData() {
             });
         });
 
-        // GENERATE PLAYOFF PLACEHOLDERS
-        const groupCount = Object.keys(groups).length;
-        let playoffMatches = [];
+        // GENERATE PLAYOFFS FOR THIS CATEGORY
+        const groupList = Object.keys(groups).sort();
+        const numGroups = groupList.length;
 
-        if (groupCount === 4 || category === "4ª Femenina") {
-            ['Q1', 'Q2', 'Q3', 'Q4'].forEach((q, i) => {
+        if (numGroups === 4 || numGroups === 3) {
+            // Quarters
+            for (let i = 1; i <= 4; i++) {
                 data.matches.push({
-                    id: 1000 + data.matches.length,
-                    matchName: `Cuartos ${i + 1}`, teamA: 'TBD', teamB: 'TBD',
-                    scoreA: null, scoreB: null, status: 'pending', stage: 'quarter',
-                    category: category, time: '16:30', court: 'Pista ?'
+                    id: 10000 + data.matches.length,
+                    matchName: `Cuartos ${i}`,
+                    teamA: `TBD Q${i}A`, teamB: `TBD Q${i}B`,
+                    scoreA: null, scoreB: null,
+                    status: "pending", stage: "quarter",
+                    category: category, time: "16:30", court: "Pista ?"
                 });
-            });
-            ['S1', 'S2'].forEach((s, i) => {
+            }
+            // Semis
+            for (let i = 1; i <= 2; i++) {
                 data.matches.push({
-                    id: 2000 + data.matches.length,
-                    matchName: `Semi ${i + 1}`, teamA: 'Ganador Cuartos', teamB: 'Ganador Cuartos',
-                    scoreA: null, scoreB: null, status: 'pending', stage: 'semi',
-                    category: category, time: '17:30', court: 'Pista ?'
+                    id: 20000 + data.matches.length,
+                    matchName: `Semi ${i}`,
+                    teamA: `Ganador Cuartos ${i * 2 - 1}`, teamB: `Ganador Cuartos ${i * 2}`,
+                    scoreA: null, scoreB: null,
+                    status: "pending", stage: "semi",
+                    category: category, time: "17:30", court: "Pista ?"
                 });
-            });
+            }
+            // Final
             data.matches.push({
-                id: 3000 + data.matches.length,
-                matchName: 'Final', teamA: 'Finalista 1', teamB: 'Finalista 2',
-                scoreA: null, scoreB: null, status: 'pending', stage: 'final',
-                category: category, time: '18:30', court: 'Pista 1'
+                id: 30000 + data.matches.length,
+                matchName: "Final",
+                teamA: "Ganador Semi 1", teamB: "Ganador Semi 2",
+                scoreA: null, scoreB: null,
+                status: "pending", stage: "final",
+                category: category, time: "18:30", court: "Pista 1"
             });
-        } else {
-            // Smaller categories
-            ['S1', 'S2'].forEach((s, i) => {
+        } else if (numGroups === 2 || category === "3ª Masculina") {
+            // Semis
+            for (let i = 1; i <= 2; i++) {
                 data.matches.push({
-                    id: 4000 + data.matches.length,
-                    matchName: `Semi ${i + 1}`, teamA: 'TBD', teamB: 'TBD',
-                    scoreA: null, scoreB: null, status: 'pending', stage: 'semi',
-                    category: category, time: '16:30', court: 'Pista ?'
+                    id: 20000 + data.matches.length,
+                    matchName: `Semi ${i}`,
+                    teamA: `TBD S${i}A`, teamB: `TBD S${i}B`,
+                    scoreA: null, scoreB: null,
+                    status: "pending", stage: "semi",
+                    category: category, time: category === "4ª Masculina" ? "16:30" : "17:30", court: "Pista ?"
                 });
-            });
+            }
+            // Final
             data.matches.push({
-                id: 5000 + data.matches.length,
-                matchName: 'Final', teamA: 'Finalista 1', teamB: 'Finalista 2',
-                scoreA: null, scoreB: null, status: 'pending', stage: 'final',
-                category: category, time: '17:30', court: 'Pista 1'
+                id: 30000 + data.matches.length,
+                matchName: "Final",
+                teamA: "Ganador Semi 1", teamB: "Ganador Semi 2",
+                scoreA: null, scoreB: null,
+                status: "pending", stage: "final",
+                category: category, time: category === "4ª Masculina" ? "17:15" : "18:30", court: "Pista 1"
+            });
+        } else if (numGroups === 1) {
+            // Final Directly
+            data.matches.push({
+                id: 30000 + data.matches.length,
+                matchName: "Final",
+                teamA: "1º Grupo A", teamB: "2º Grupo A",
+                scoreA: null, scoreB: null,
+                status: "pending", stage: "final",
+                category: category, time: "18:30", court: "Pista 1"
             });
         }
     });
 
     data.groups = [...new Set(data.groups)].sort();
+    console.log("Initial Data Generated:", data.matches.length, "matches.");
     return data;
 }
 
@@ -243,6 +268,16 @@ function validateAndRepairData() {
             if (!m.time) m.time = 'TBD';
             if (!m.court) m.court = 'Pista ?';
         });
+
+        // Ensure playoffs exist
+        const hasPlayoffs = tournamentData.matches.some(m => m.stage && m.stage !== 'group');
+        if (!hasPlayoffs) {
+            console.log("Playoffs missing, regenerating structure...");
+            const freshData = generateInitialData();
+            const playoffMatches = freshData.matches.filter(m => m.stage && m.stage !== 'group');
+            tournamentData.matches = [...tournamentData.matches, ...playoffMatches];
+            saveState();
+        }
     } catch (err) {
         console.error("Recovery failed, generating fresh data", err);
         tournamentData = generateInitialData();
@@ -285,6 +320,51 @@ function forceSyncSchedule() {
 }
 
 validateAndRepairData();
+
+// --- PATCH: FORCE OFFICIAL PLAYOFF SCHEDULE (ROBUST VERSION) ---
+(function applyPlayoffPatch() {
+    const PATCH_ID = "20251228-SCHEDULE-V3-ROBUST";
+    if (tournamentData && tournamentData.appliedPatches?.includes(PATCH_ID)) return;
+
+    console.log("🛠 APLICANDO PARCHE DE PROGRAMACIÓN OFICIAL (V3)...");
+    if (typeof BAKED_DATA !== 'undefined' && BAKED_DATA.matches) {
+        let updatedCount = 0;
+
+        // Helper to normalize category for safer matching (e.g. 4ª vs 4º)
+        const norm = (s) => (s || "").toLowerCase().trim()
+            .replace(/[ªº]/g, 'a')
+            .replace(/\s+/g, '');
+
+        BAKED_DATA.matches.filter(m => m.stage && m.stage !== 'group').forEach(official => {
+            // Try matching by ID first, then by Category + Stage + Name
+            let live = tournamentData.matches.find(lm => lm.id == official.id);
+
+            if (!live) {
+                live = tournamentData.matches.find(lm =>
+                    norm(lm.category) === norm(official.category) &&
+                    lm.stage === official.stage &&
+                    (lm.matchName || "") === (official.matchName || "")
+                );
+            }
+
+            if (live) {
+                // Force update court and time
+                live.time = official.time;
+                live.court = official.court;
+                updatedCount++;
+                console.log(`  [PATCH] Match ${official.id} (${official.category} ${official.matchName || ''}) -> ${official.time} en ${official.court}`);
+            }
+        });
+
+        console.log(`✅ Parche aplicado: ${updatedCount} partidos actualizados.`);
+
+        if (!tournamentData.appliedPatches) tournamentData.appliedPatches = [];
+        if (!tournamentData.appliedPatches.includes(PATCH_ID)) {
+            tournamentData.appliedPatches.push(PATCH_ID);
+        }
+        saveState();
+    }
+})();
 
 let activeMatchesCat = null;
 let activeStandingsCat = null;
@@ -433,35 +513,57 @@ function syncWithFirebase() {
     });
 }
 
-// Render results ticker
+// Render results ticker V2 - Including Live, Finished and Upcoming
 function renderTicker() {
     const tickerContainer = document.getElementById('ticker-results');
     if (!tickerContainer) return;
 
-    // Get last 15 finished matches
-    const finishedMatches = tournamentData.matches
-        .filter(m => m.status === 'finished' && m.scoreA !== null && m.scoreB !== null)
-        .sort((a, b) => b.id - a.id) // Most recent first
-        .slice(0, 15);
+    // 1. Collect a diverse mix of matches
+    const finished = tournamentData.matches
+        .filter(m => m.status === 'finished' && m.scoreA !== null)
+        .sort((a, b) => b.id - a.id); // Descendente: Los id más altos (últimos en crearse/actualizarse) primero
 
-    if (finishedMatches.length === 0) {
-        tickerContainer.innerHTML = '<span style="padding: 0 2rem;">No hay resultados aún...</span>';
+    const live = tournamentData.matches.filter(m => m.status === 'live' || m.status === 'in-play' || m.status === 'playing');
+    const upcoming = tournamentData.matches.filter(m => m.status === 'pending').sort((a, b) => a.id - b.id).slice(0, 15);
+
+    // Combine them: Live first, then Finished, then Upcoming
+    let allTickerMatches = [...live, ...finished, ...upcoming];
+
+    if (allTickerMatches.length === 0) {
+        tickerContainer.innerHTML = '<span style="padding: 0 2rem; color: #888;">Cargando programación...</span>';
         return;
     }
 
-    // Duplicate for seamless loop
-    const doubled = [...finishedMatches, ...finishedMatches];
+    // 2. Multiply items for infinite billboard effect (targeting 40+ items)
+    let itemsToDisplay = [...allTickerMatches];
+    const targetCount = 40;
+    while (itemsToDisplay.length < targetCount && allTickerMatches.length > 0) {
+        itemsToDisplay = [...itemsToDisplay, ...allTickerMatches];
+    }
 
-    tickerContainer.innerHTML = doubled.map(match => {
-        const winnerA = match.scoreA > match.scoreB;
-        const winnerB = match.scoreB > match.scoreA;
+    tickerContainer.innerHTML = itemsToDisplay.map(match => {
+        const winnerA = match.status === 'finished' && match.scoreA > match.scoreB;
+        const winnerB = match.status === 'finished' && match.scoreB > match.scoreA;
+        const catSlug = (match.category || "").toLowerCase().replace(/ª/g, 'a').replace(/\s+/g, '-');
+        const catClass = `cat-accent-${catSlug}`;
+
+        let statusBadge = "";
+        if (match.status === 'live' || match.status === 'playing' || match.status === 'in-play') {
+            statusBadge = `<span class="broadcast-badge-live">EN JUEGO</span>`;
+        } else if (match.status === 'pending') {
+            statusBadge = `<span class="broadcast-badge">${match.time || "PROX."}</span>`;
+        }
 
         return `
-            <span class="ticker-item" onclick="navigateToMatch(${match.id})">
-                <span class="${winnerA ? 'ticker-winner' : 'ticker-loser'}">${match.teamA}</span>
-                <span class="ticker-score">${match.scoreA}-${match.scoreB}</span>
-                <span class="${winnerB ? 'ticker-winner' : 'ticker-loser'}">${match.teamB}</span>
-            </span>
+            <div class="ticker-item ticker-glass ticker-cat-${catSlug}" onclick="navigateToMatch(${match.id})">
+                <span class="category-pill ${catClass}">${match.category}</span>
+                <div class="ticker-match-content">
+                    <span class="team-name ${winnerA ? 'ticker-winner-shimmer' : ''}">${match.teamA}</span>
+                    <span class="ticker-score-box">${match.scoreA ?? 0}-${match.scoreB ?? 0}</span>
+                    <span class="team-name ${winnerB ? 'ticker-winner-shimmer' : ''}">${match.teamB}</span>
+                </div>
+                ${statusBadge}
+            </div>
         `;
     }).join('');
 }
@@ -538,29 +640,60 @@ function toggleLiveFeed() {
     }
 }
 
+// Render live feed panel
 function renderLiveFeed() {
     const container = document.getElementById('liveFeedContent');
-    if (!container) return;
+    const panel = document.getElementById('liveFeedPanel');
+    if (!container || !panel) return;
 
     const liveMatches = tournamentData.matches.filter(m =>
         m.status === 'live' || m.status === 'in-play' || m.status === 'playing'
     );
 
     if (liveMatches.length === 0) {
-        container.innerHTML = '<div class="no-live-matches">No hay partidos en juego en este momento</div>';
+        panel.style.display = 'none';
         return;
     }
 
-    container.innerHTML = liveMatches.map(match => `
-        <div class="live-match-item" onclick="navigateToMatch(${match.id})">
-            <div class="live-match-court">${match.court}</div>
-            <div class="live-match-teams">
-                <div class="live-team">${match.teamA} <span class="live-score">${match.scoreA ?? 0}</span></div>
-                <div class="live-team">${match.teamB} <span class="live-score">${match.scoreB ?? 0}</span></div>
+    panel.style.display = 'block';
+
+    container.innerHTML = liveMatches.map(match => {
+        const catSlug = (match.category || "").toLowerCase().replace(/[ªº]/g, 'a').replace(/\s+/g, '-');
+        const catClass = `cat-accent-${catSlug}`;
+        const stageLabel = (match.stage === 'group' ? `G${match.group}` : match.stage).toUpperCase();
+
+        return `
+            <div class="live-match-premium card-cat-${catSlug}" onclick="navigateToMatch(${match.id})">
+                <div class="live-match-top">
+                    <div class="live-match-cat">
+                         <span class="cat-badge ${catClass}">${match.category}</span>
+                         <span class="cat-badge" style="background:rgba(255,255,255,0.05); color:white;">${stageLabel}</span>
+                    </div>
+                    <div class="match-court-tag">
+                        <i class="fas fa-satellite-dish"></i> ${match.court}
+                    </div>
+                </div>
+                
+                <div class="elite-scoreboard">
+                    <div class="elite-score-row">
+                        <span class="elite-player-name">${match.teamA}</span>
+                        <div class="elite-score-led">${match.scoreA ?? 0}</div>
+                    </div>
+                    <div class="elite-score-row">
+                        <span class="elite-player-name">${match.teamB}</span>
+                        <div class="elite-score-led">${match.scoreB ?? 0}</div>
+                    </div>
+                </div>
+
+                <div class="elite-footer">
+                    <div class="live-signal">
+                        <div class="signal-dot"></div> SEÑAL EN VIVO
+                    </div>
+                    <div class="match-time-tag">${match.time || ''}</div>
+                </div>
             </div>
-            <div class="live-pulse"></div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 // --- CORE LOGIC ---
@@ -710,6 +843,7 @@ function init() {
                 // Refresh specific views just in case
                 if (btn.dataset.tab === 'playoffs') renderBrackets();
                 if (btn.dataset.tab === 'matches') renderMatches();
+                if (btn.dataset.tab === 'schedule') renderSchedule();
                 if (btn.dataset.tab === 'standings') renderStandings();
                 if (btn.dataset.tab === 'stats') {
                     try {
@@ -761,6 +895,7 @@ function updateUI() {
 
     renderStandings();
     renderMatches();
+    renderSchedule();
     renderBrackets();
     try {
         if (typeof renderStatsCharts === 'function') renderStatsCharts();
@@ -788,6 +923,254 @@ function renderCategoryTabs(containerId, activeCat, onSelect) {
         };
         container.appendChild(btn);
     });
+}
+
+// --- SCHEDULE HUB GENERATION ---
+let activeScheduleCat = null;
+let isAdminScheduleMode = false;
+
+function toggleScheduleEditor() {
+    isAdminScheduleMode = !isAdminScheduleMode;
+    const gridView = document.getElementById('admin-matches-grid') || document.getElementById('admin-matches-list');
+    const editorView = document.getElementById('admin-schedule-editor');
+    const btn = document.querySelector('[onclick="toggleScheduleEditor()"]');
+
+    if (isAdminScheduleMode) {
+        if (gridView) gridView.style.display = 'none';
+        if (editorView) editorView.style.display = 'block';
+        if (btn) {
+            btn.innerHTML = '<i class="fas fa-list"></i> Ver Lista de Partidos';
+            btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+        }
+        renderSchedule(true);
+    } else {
+        if (gridView) gridView.style.display = 'grid';
+        if (editorView) editorView.style.display = 'none';
+        if (btn) {
+            btn.innerHTML = '<i class="fas fa-calendar-edit"></i> Editor de Programación';
+            btn.style.background = 'linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%)';
+        }
+        initAdmin();
+    }
+}
+
+function renderSchedule(isAdmin = false) {
+    const containerId = isAdmin ? 'admin-schedule-grid-container' : 'schedule-grid-container';
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    // Determine Dynamic Time Slots and Courts
+    const allMatches = tournamentData.matches;
+    const uniqueTimes = [...new Set(allMatches.map(m => m.time || 'TBD'))].sort((a, b) => {
+        if (a === 'TBD') return 1;
+        if (b === 'TBD') return -1;
+        return a.localeCompare(b);
+    });
+
+    // Ensure standard slots are included if empty, or just use what we have
+    const timeSlots = uniqueTimes.length > 0 ? uniqueTimes : ["13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30"];
+
+    const uniqueCourts = [...new Set(allMatches.map(m => m.court || 'Pista ?'))].sort((a, b) => {
+        const numA = parseInt(a.replace(/\D/g, '')) || 999;
+        const numB = parseInt(b.replace(/\D/g, '')) || 999;
+        return numA - numB;
+    });
+
+    // Always show at least 14 courts if it's the standard, but include others if they exist
+    let courts = Array.from({ length: 14 }, (_, i) => `Pista ${i + 1}`);
+    uniqueCourts.forEach(c => { if (!courts.includes(c)) courts.push(c); });
+
+    // Unified View
+    container.innerHTML = `<div class="schedule-grid" id="${isAdmin ? 'admin-' : ''}main-schedule-grid" style="grid-template-columns: 100px repeat(${courts.length}, minmax(180px, 1fr));"></div>`;
+    const grid = document.getElementById(`${isAdmin ? 'admin-' : ''}main-schedule-grid`);
+
+    // Add HORAs Header Cell
+    const timeHeader = document.createElement('div');
+    timeHeader.className = 'grid-header-cell time-column-header';
+    timeHeader.textContent = 'HORA';
+    grid.appendChild(timeHeader);
+
+    // Add Court Header Cells
+    courts.forEach(court => {
+        const courtHeader = document.createElement('div');
+        courtHeader.className = 'grid-header-cell';
+        courtHeader.textContent = court;
+        grid.appendChild(courtHeader);
+    });
+
+    const scheduleMap = {};
+    allMatches.forEach(m => {
+        const key = `${m.time || 'TBD'}-${m.court || 'Pista ?'}`;
+        if (!scheduleMap[key]) scheduleMap[key] = [];
+        scheduleMap[key].push(m);
+    });
+
+    timeSlots.forEach(time => {
+        // Add Time Cell
+        const timeCell = document.createElement('div');
+        timeCell.className = 'time-cell';
+        timeCell.textContent = time;
+        grid.appendChild(timeCell);
+
+        courts.forEach(court => {
+            const matches = scheduleMap[`${time}-${court}`] || [];
+            const cell = document.createElement('div');
+            cell.className = 'grid-match-cell';
+
+            if (matches.length > 0) {
+                matches.forEach(match => {
+                    const catClass = getCategoryClass(match.category);
+                    const stageClass = match.stage ? `pill-stage-${match.stage}` : '';
+                    const statusClass = match.status === 'live' ? 'pill-live' : (match.status === 'finished' ? 'pill-finished' : '');
+
+                    const pill = document.createElement('div');
+                    pill.className = `schedule-match-pill pill-cat-${catClass} ${stageClass} ${statusClass}`;
+                    pill.onclick = () => isAdmin ? adminEditMatch(match.id) : navigateToMatch(match.id);
+
+                    let scoreHtml = '';
+                    if (match.status === 'finished' || match.status === 'live') {
+                        scoreHtml = `<div class="sm-pill-score">${match.scoreA ?? 0} - ${match.scoreB ?? 0}</div>`;
+                    }
+
+                    pill.innerHTML = `
+                        <div class="sm-pill-header">
+                            <span class="sm-pill-cat">${match.category}</span>
+                            <span class="sm-pill-group">${match.group ? 'G.' + match.group : (match.matchName || '')}</span>
+                        </div>
+                        <div class="sm-pill-players">
+                            ${match.teamA}<br>
+                            ${match.teamB}
+                        </div>
+                        ${scoreHtml}
+                    `;
+                    cell.appendChild(pill);
+                });
+            } else if (isAdmin) {
+                const addBtn = document.createElement('div');
+                addBtn.className = 'admin-add-slot';
+                addBtn.onclick = () => adminAddMatch(time, court);
+                addBtn.innerHTML = `<i class="fas fa-plus-circle"></i> ADD`;
+                cell.appendChild(addBtn);
+            }
+            grid.appendChild(cell);
+        });
+    });
+}
+
+function adminAddMatch(time, court) {
+    const category = prompt("Categoría (ej: 4ª Femenina, 4ª Mixta, 4ª Masculina, 3ª Mixta, 3ª Masculina):", "4ª Mixta");
+    if (!category) return;
+
+    const type = confirm("¿Es un partido de FASE FINAL (Aceptar) o GRUPOS (Cancelar)?");
+    let stage = "";
+    let group = "";
+
+    if (type) {
+        stage = prompt("Fase (quarter, semi, final):", "quarter");
+    } else {
+        group = prompt("Grupo (ej: 1, 2, A, B):", "1");
+    }
+
+    const teamA = prompt("Jugadora/Equipo A:", "TBD");
+    const teamB = prompt("Jugadora/Equipo B:", "TBD");
+
+    if (teamA && teamB) {
+        const newMatch = {
+            id: Date.now(), // Generate unique ID
+            category: category,
+            group: group,
+            stage: stage,
+            time: time,
+            court: court,
+            teamA: teamA,
+            teamB: teamB,
+            scoreA: 0,
+            scoreB: 0,
+            status: "PENDIENTE",
+            winner: null
+        };
+
+        tournamentData.matches.push(newMatch);
+        saveState().then(() => {
+            renderSchedule(true);
+        });
+    }
+}
+
+function adminEditMatch(matchId) {
+    const match = tournamentData.matches.find(m => m.id === matchId);
+    if (!match) return;
+
+    const action = prompt(
+        `PARTIDO: ${match.teamA} vs ${match.teamB}\n` +
+        `----------------------------------------\n` +
+        `1. Editar Horario/Pista (${match.time} / ${match.court})\n` +
+        `2. Editar Equipos/Categoría\n` +
+        `3. Editar Resultado (${match.scoreA} - ${match.scoreB})\n` +
+        `4. Cambiar Estado (${match.status})\n` +
+        `5. ELIMINAR PARTIDO\n` +
+        `6. Cancelar`,
+        "1"
+    );
+
+    if (action === "1") {
+        const newTime = prompt("Nueva Hora (ej: 14:30):", match.time);
+        const newCourt = prompt("Nueva Pista (ej: Pista 5):", match.court);
+
+        if (newTime !== null) match.time = newTime.trim();
+        if (newCourt !== null) match.court = newCourt.trim();
+
+        saveState().then(() => renderSchedule(true));
+    } else if (action === "2") {
+        const newCat = prompt("Categoría:", match.category);
+        if (newCat) match.category = newCat;
+
+        if (!match.stage || match.stage === 'group') {
+            const newGroup = prompt("Grupo:", match.group);
+            if (newGroup) match.group = newGroup;
+        } else {
+            const newStage = prompt("Fase (quarter, semi, final):", match.stage);
+            const newName = prompt("Nombre del partido (ej: Cuartos 1):", match.matchName);
+            if (newStage) match.stage = newStage;
+            if (newName) match.matchName = newName;
+        }
+
+        const newTeamA = prompt("Equipo A:", match.teamA);
+        if (newTeamA) match.teamA = newTeamA;
+
+        const newTeamB = prompt("Equipo B:", match.teamB);
+        if (newTeamB) match.teamB = newTeamB;
+
+        saveState().then(() => renderSchedule(true));
+    } else if (action === "3") {
+        const sA = prompt("Resultado Equipo A:", match.scoreA ?? 0);
+        const sB = prompt("Resultado Equipo B:", match.scoreB ?? 0);
+        if (sA !== null) match.scoreA = parseInt(sA) || 0;
+        if (sB !== null) match.scoreB = parseInt(sB) || 0;
+
+        saveState().then(() => renderSchedule(true));
+    } else if (action === "4") {
+        const newStatus = prompt("Nuevo Estado (pending, live, finished):", match.status);
+        if (newStatus && ['pending', 'live', 'finished'].includes(newStatus.toLowerCase())) {
+            match.status = newStatus.toLowerCase();
+            saveState().then(() => renderSchedule(true));
+        }
+    } else if (action === "5") {
+        if (confirm(`¿Estás seguro de que quieres eliminar COMPLETAMENTE el partido ${match.teamA} vs ${match.teamB}?`)) {
+            tournamentData.matches = tournamentData.matches.filter(m => m.id !== matchId);
+            saveState().then(() => renderSchedule(true));
+        }
+    }
+}
+
+function getCategoryClass(cat) {
+    if (!cat) return 'default';
+    if (cat.includes('4ª Femenina')) return '4fem';
+    if (cat.includes('4ª Mixta')) return '4mix';
+    if (cat.includes('4ª Masculina')) return '4masc';
+    if (cat.includes('3ª Mixta')) return '3mix';
+    if (cat.includes('3ª Masculina')) return '3masc';
+    return 'default';
 }
 
 function renderStandings() {
@@ -938,6 +1321,7 @@ function renderMatches() {
 // --- ADMIN LOGIC ---
 
 function initAdmin() {
+
     const list = document.getElementById('admin-matches-grid') || document.getElementById('admin-matches-list');
     if (!list) return;
 
@@ -1467,6 +1851,10 @@ window.scrollSponsors = scrollSponsors;
 window.goToSponsor = goToSponsor;
 window.toggleLiveFeed = toggleLiveFeed;
 window.renderLiveFeed = renderLiveFeed;
+window.toggleScheduleEditor = toggleScheduleEditor;
+window.renderSchedule = renderSchedule;
+window.adminAddMatch = adminAddMatch;
+window.adminEditMatch = adminEditMatch;
 
 function normalizeText(text) {
     return text ? text.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : "";
