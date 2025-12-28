@@ -226,7 +226,7 @@ function generateInitialData() {
 }
 
 // --- STATE MANAGEMENT ---
-let tournamentData = (function () {
+window.tournamentData = (function () {
     try {
         const stored = localStorage.getItem('tournamentData');
 
@@ -1855,6 +1855,7 @@ window.toggleScheduleEditor = toggleScheduleEditor;
 window.renderSchedule = renderSchedule;
 window.adminAddMatch = adminAddMatch;
 window.adminEditMatch = adminEditMatch;
+window.getStandings = getStandings;
 
 function normalizeText(text) {
     return text ? text.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : "";
