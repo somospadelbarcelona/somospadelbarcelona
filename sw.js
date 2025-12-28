@@ -5,7 +5,7 @@ const ASSETS_TO_CACHE = [
     './style.css',
     './app.js',
     './baked_data.js',
-    './logo-app.png',
+    './logo-somospadel-bcn.png',
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
 ];
 
