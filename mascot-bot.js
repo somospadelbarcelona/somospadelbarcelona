@@ -7,7 +7,7 @@ class PadelBot {
     constructor() {
         this.isOpen = false;
         this.suggestions = [
-            "🏆 ¿Próximo partido?",
+            "🏆 Próximo partido",
             "📊 Clasificación",
             "📅 Programación Total",
             "🔥 Eliminatorias",
@@ -107,100 +107,119 @@ class PadelBot {
     }
 
     async handleUserInput(textOverride = null) {
-        const input = document.getElementById('bot-input');
-        const val = textOverride || input.value.trim();
-        if (!val) return;
-        input.value = '';
-        this.addMessage("user", val);
-        const response = await this.processAI(val);
-        setTimeout(() => this.addMessage("bot", response), 500);
+        try {
+            const input = document.getElementById('bot-input');
+            const val = textOverride || input.value.trim();
+            if (!val) return;
+            input.value = '';
+            this.addMessage("user", val);
+
+            const response = await this.processAI(val).catch(err => {
+                console.error("AI Error:", err);
+                return "Ups, he tenido un pequeño cruce de cables... 😵 ¿Me lo puedes preguntar de otra forma?";
+            });
+
+            setTimeout(() => this.addMessage("bot", response), 500);
+        } catch (e) {
+            console.error("Chatbot Error:", e);
+        }
     }
 
     async processAI(query) {
-        const q = this.normalize(query);
-        const data = window.tournamentData || {};
+        try {
+            const q = this.normalize(query);
+            const data = window.tournamentData || {};
 
-        // 1. Lógica de CLASIFICACIÓN ESPECÍFICA (Si menciona nombre + clasificación/puntos)
-        if (q.includes("clasificacion") || q.includes("puntos") || q.includes("puesto") || q.includes("posicion")) {
-            const searchName = q.replace(/clasificacion|puntos|puesto|posicion|de|la|el/g, "").trim();
-            if (searchName.length >= 3) {
-                const playerMatch = (data.matches || []).find(m =>
-                    this.normalize(m.teamA).includes(searchName) ||
-                    this.normalize(m.teamB).includes(searchName)
-                );
+            // --- LIMPIEZA DE QUERY ---
+            const fillerWords = ["proximo", "partido", "cuando", "juego", "mi", "horario", "pista", "donde", "clasificacion", "puntos", "puesto", "posicion", "de", "la", "el", "los", "las", "a", "en", "para", "buscar", "jugador"];
+            let keywords = q.split(" ").filter(word => !fillerWords.includes(word) && word.length >= 3);
+            const cleanName = keywords.join(" ").trim();
 
-                if (playerMatch && typeof window.getStandings === 'function') {
-                    const teamName = this.normalize(playerMatch.teamA).includes(searchName) ? playerMatch.teamA : playerMatch.teamB;
-                    const leaderboard = window.getStandings(playerMatch.category, playerMatch.group);
-                    const pos = leaderboard.findIndex(s => s.name === teamName);
+            // 1. CLASIFICACIÓN
+            if (q.includes("clasificacion") || q.includes("puntos") || q.includes("puesto")) {
+                if (cleanName.length >= 3) {
+                    const playerMatch = (data.matches || []).find(m =>
+                        this.normalize(m.teamA).includes(cleanName) ||
+                        this.normalize(m.teamB).includes(cleanName)
+                    );
 
-                    if (pos !== -1) {
-                        const s = leaderboard[pos];
-                        return `📊 **Clasificación para ${teamName}:**\n\nVa en la **posición ${pos + 1}** del Grupo ${playerMatch.group} (${playerMatch.category}).\n\n- Puntos: **${s.points}**\n- Partidos: ${s.played}\n- Ganados: ${s.won}\n- Diferencia: ${s.diff > 0 ? '+' : ''}${s.diff} juegos.\n\n¡A seguir dándole duro! 🎾🔥`;
+                    if (playerMatch && typeof window.getStandings === 'function') {
+                        const teamName = this.normalize(playerMatch.teamA).includes(cleanName) ? playerMatch.teamA : playerMatch.teamB;
+                        const leaderboard = window.getStandings(playerMatch.category, playerMatch.group);
+                        const pos = leaderboard.findIndex(s => s.name === teamName);
+                        if (pos !== -1) {
+                            const s = leaderboard[pos];
+                            return `📊 **Clasificación para ${teamName}:**\n\nPosición: **${pos + 1}º** (Grupo ${playerMatch.group}).\n\n- Puntos: **${s.points}**\n- Juegos: ${s.gf}/${s.ga} (${s.diff > 0 ? '+' : ''}${s.diff})`;
+                        }
                     }
                 }
             }
-        }
 
-        // 2. Lógica de Búsqueda de PARTIDOS (Nombre solo o con "cuando juego")
-        const isNavQuery = q === "clasificacion" || q === "puntos" || q === "puesto" || q === "cuando juego";
-        const isGreeting = q.includes("hola") || q.includes("buenos") || q.includes("buenas");
+            // 2. BÚSQUEDA DE JUGADORES (Híper-Flexible)
+            if (keywords.length > 0) {
+                const allMatches = data.matches || [];
 
-        if (q.length >= 3 && !isNavQuery && !isGreeting) {
-            const searchName = q.replace(/cuando|juego|mi|partido|horario|pista/g, "").trim();
-            const target = searchName.length >= 3 ? searchName : q;
-
-            const matches = (data.matches || []).filter(m =>
-                this.normalize(m.teamA).includes(target) ||
-                this.normalize(m.teamB).includes(target)
-            );
-
-            if (matches.length > 0) {
-                let response = `¡Te tengo! He encontrado estos partidos para **"${target}"**:\n\n`;
-                matches.forEach(m => {
-                    const isTeamA = this.normalize(m.teamA).includes(target);
-                    const rival = isTeamA ? m.teamB : m.teamA;
-                    const time = m.time ? ` a las **${m.time}**` : "";
-                    const court = m.court ? ` en la **Pista ${m.court}**` : "";
-                    const result = m.status === 'finished' ? ` | **Resultado: ${m.scoreA}-${m.scoreB}**` :
-                        m.status === 'live' ? " | 🔴 **¡EN JUEGO!**" : "";
-
-                    response += `🎾 vs **${rival}**\n📍 ${court}${time}${result}\n\n`;
+                // Intento A: Todas las palabras coinciden (Ej: "Angel Millan")
+                let matches = allMatches.filter(m => {
+                    const tA = this.normalize(m.teamA);
+                    const tB = this.normalize(m.teamB);
+                    return keywords.every(kw => tA.includes(kw)) || keywords.every(kw => tB.includes(kw));
                 });
-                return response;
+
+                // Intento B: Alguna palabra coincide (Ej: "Toni Millan" -> Toni Palau o Angel Millan)
+                if (matches.length === 0) {
+                    matches = allMatches.filter(m => {
+                        const tA = this.normalize(m.teamA);
+                        const tB = this.normalize(m.teamB);
+                        return keywords.some(kw => tA.includes(kw)) || keywords.some(kw => tB.includes(kw));
+                    });
+                }
+
+                if (matches.length > 0) {
+                    const results = matches.slice(0, 4);
+                    let response = `¡Te tengo! He encontrado esto para **"${cleanName}"**:\n\n`;
+
+                    results.forEach(m => {
+                        const isTeamA = keywords.some(kw => this.normalize(m.teamA).includes(kw));
+                        const me = isTeamA ? m.teamA : m.teamB;
+                        const rival = isTeamA ? m.teamB : m.teamA;
+                        const status = m.status === 'finished' ? ` | **${m.scoreA}-${m.scoreB}**` :
+                            m.status === 'live' ? " | 🔴 **LIVE**" : ` | 🕒 **${m.time || 'TBD'}**`;
+
+                        response += `🎾 **${me}** vs **${rival}**\n📍 Pista ${m.court || '?'}${status}\n\n`;
+                    });
+
+                    if (matches.length > 4) response += "*(Hay más partidos, sé más específico)*";
+                    return response;
+                }
             }
-        }
 
-        // 3. Respuestas Genéricas de Navegación
-        if (q.includes("cuando juego") || q.includes("horario") || q.includes("mi hora")) {
-            return "¡Fácil! **Dime tu nombre** y buscaré tu pista y horario al momento. ¡Dime quién eres!";
-        }
+            // 3. COMANDOS RÁPIDOS
+            if (q.includes("reglas") || q.includes("normativa") || q.includes("oro") || q.includes("tiempo")) {
+                return `¡Aquí las tienes claras! 📖\n\n1. **Punto de Oro:** En 40-40, el siguiente gana.\n2. **Dudas:** Ante cualquier desacuerdo, se repite.\n3. **Fin de tiempo:** El juego inacabado **no cuenta** si ya hay un ganador. **Solo si hay empate a juegos** desempatamos con el juego actual.`;
+            }
 
-        if (q.includes("clasificacion") || q.includes("puntos") || q.includes("puesto")) {
-            return "¡La tabla está que arde! 🏁 Puedes ver la clasificación completa de cada grupo pulsando en la pestaña **'Clasificación'** de arriba. Si buscas tu posición exacta, dime **'Clasificación' + tu nombre**.";
-        }
+            if (q.includes("premio") || q.includes("ganar") || q.includes("jamon") || q.includes("cookie") || q.includes("sorteo")) {
+                return `¡Los premios son brutales! 🎁✨\n\n- **🥇 Campeones:** Paletilla del Guijuelo.\n- **🥈 Finalistas:** Cookies Luvidocookies.\n- **🎉 Sorteo:** ¡Otra paletilla extra entre todos!`;
+            }
 
-        if (q.includes("reglas") || q.includes("normativa") || q.includes("punto de oro") || q.includes("duda") || q.includes("tiempo")) {
-            return `¡Aquí las tienes claras! 📖\n\n1. **Punto de Oro:** En 40-40, el siguiente gana.\n2. **Dudas:** Ante cualquier desacuerdo, se repite el punto.\n3. **Fin de tiempo:** El juego inacabado **no cuenta** si ya hay un ganador. **Solo si hay empate a juegos** se mira quién va ganando el juego actual para desempatar.\n\nCada juego es vital para el desempate del grupo, ¡jugadlos todos!`;
-        }
+            if (q.includes("eliminatoria") || q.includes("final") || q.includes("cuadro")) {
+                return "¡La fase decisiva! 🏆 Consulta la pestaña **'Eliminatorias'** arriba para ver los cuadros y cruces.";
+            }
 
-        if (q.includes("premio") || q.includes("ganar") || q.includes("jamon") || q.includes("paletilla") || q.includes("cookie") || q.includes("sorteo")) {
-            return `¡Los premios son brutales! 🎁✨\n\n- **1º Campeones:** La mítica **Paletilla de Jamón del Guijuelo**. 🍖\n- **2º Finalistas:** Un delicioso obsequio de **Luvidocookies**. 🍪\n\n¡Y lo mejor! Habrá un **Sorteo Final** con productos que os van a encantar y... **¡Sortearemos otra paletilla de jamón adicional!** entre todos los participantes. 🎉\n\n¡Nadie se va con las manos vacías!`;
-        }
+            if (q.includes("programacion") || q.includes("cuadrante") || q.includes("horario")) {
+                return "📅 **Programación:** Pulsa en la pestaña **'Programación'** arriba para ver el cuadrante de todas las pistas.";
+            }
 
-        if (q.includes("eliminatoria") || q.includes("finales") || q.includes("cruces") || q.includes("cuadro")) {
-            return "¡La fase decisiva! 🏆 Puedes ver todos los cuadros de eliminatorias (Cuartos, Semis y Finales) pulsando en la pestaña **'Eliminatorias'** de arriba. Ahí verás quién se cruza con quién tras la fase de grupos.";
-        }
+            if (q.includes("hola") || q.includes("buenos") || q.includes("buenas")) {
+                return "¡Hola! 👋 Soy tu compañero de pista. Dime tu nombre para ver cuándo juegas.";
+            }
 
-        if (q.includes("programacion") || q.includes("cuadrante") || q.includes("todo el dia") || q.includes("pistas")) {
-            return "📅 **Ver la Programación:** Para ver el despliegue de todas las pistas y horarios del día, pulsa en la pestaña **'Programación'**. Allí verás el cuadrante completo de 13:30 a 18:30.";
+            return "No te he entendido del todo... 😅 pero pregúntame por **tu nombre**, tu **clasificación** o los **premios**. ¿Qué necesitas?";
+        } catch (err) {
+            console.error("AI Error:", err);
+            return "Lo siento, he tenido un pequeño error al procesar tu duda. ¿Me lo repites? 😅";
         }
-
-        if (isGreeting) {
-            return "¡Hola! 👋 ¿Cómo va el torneo? Soy tu compañero de pista, pregúntame lo que necesites.";
-        }
-
-        return "No te he entendido del todo... 😅 pero puedo buscar tu nombre, darte tu clasificación, las reglas o informarte sobre los premios. **¿Cómo se llama tu equipo o sobre qué tienes duda?**";
     }
 }
 

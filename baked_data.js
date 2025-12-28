@@ -939,7 +939,7 @@ const BAKED_DATA = {
         {
             "id": 73,
             "teamA": "Manuel Gamero / Zizi",
-            "teamB": "Maika / Josep Maria",
+            "teamB": "Falta Pareja / Falta Pareja 1",
             "scoreA": 4,
             "scoreB": 6,
             "court": "Pista 6",
@@ -965,7 +965,7 @@ const BAKED_DATA = {
         {
             "id": 75,
             "teamA": "David Navea / Ainhoa Navea",
-            "teamB": "Maika / Josep Maria",
+            "teamB": "Falta Pareja / Falta Pareja 1",
             "scoreA": 2,
             "scoreB": 1,
             "court": "Pista 6",
@@ -978,7 +978,7 @@ const BAKED_DATA = {
         {
             "id": 76,
             "teamA": "Monica Muñoz / Miki Muñoz",
-            "teamB": "Maika / Josep Maria",
+            "teamB": "Falta Pareja / Falta Pareja 1",
             "scoreA": 1,
             "scoreB": 5,
             "court": "Pista 5",
@@ -1082,7 +1082,7 @@ const BAKED_DATA = {
         {
             "id": 4083,
             "matchName": "Semi 1",
-            "teamA": "Maika / Josep Maria",
+            "teamA": "Falta Pareja / Falta Pareja 1",
             "teamB": "Ronny / Carla",
             "scoreA": null,
             "scoreB": null,

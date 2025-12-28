@@ -19,14 +19,15 @@ const RAW_TEAMS = {
         "C": ["Yoana Martinez", "Andrea Baraja", "Marta Bassons", "Joana Garcia", "Sheila Jodar", "Greis Caballero", "Marta Baijet", "Mireia Peligros"]
     },
     "3ª Masculina": {
-        "A": ["Angel Millan", "Albert Estrella", "Gerardo Jaenes", "Pablo Mena", "Sergio Serrano", "Fernando Gomez", "Eloy Arrabal", "Ness Rodera", "Toni Palau", "Carlos Asmadt", "Pablo Kellermann", "Victor Iliana"]
+        "A": ["Angel Millan", "Albert Estrella", "Gerardo Jaenes", "Pablo Mena", "Sergio Serrano", "Fernando Gomez", "Eloy Arrabal", "Ness Rodera"],
+        "B": ["Toni Palau", "Carlos Asmadt", "Pablo Kellermann", "Victor Iliana"]
     },
     "4ª Masculina": {
         "A": ["Sergio Albert", "Joan Bernard", "Oscar Cosco", "Javier Hita", "Vladimir Starciuc", "Bernat Pecharoman", "Juan Manuel Lopez", "Fernando Rodriguez"],
         "B": ["Adria Boza", "Marc Pijuan", "Cristian Lasheras", "Manu Sanhez", "Xavi Perea", "Bryan Davila", "Dani Astasio", "Marc Valldosera"]
     },
     "3ª Mixta": {
-        "A": ["Monica Muñoz", "Miki Muñoz", "David Navea", "Ainhoa Navea", "Manuel Gamero", "Zizi", "Maika", "Josep Maria"],
+        "A": ["Monica Muñoz", "Miki Muñoz", "David Navea", "Ainhoa Navea", "Manuel Gamero", "Zizi", "Falta Pareja", "Falta Pareja 1"],
         "B": ["Ronny Benalcazar", "Carla Soto", "Juanjo Ruiz", "Mariona", "Ramon Mejias", "Lola Caro", "Olga Phyloma", "Mario Sanz"]
     },
     "4ª Mixta": {
@@ -52,7 +53,7 @@ const SCHEDULE_CONFIG = {
         { cat: "4ª Femenina", groups: ["C"], courts: ["Pista 7", "Pista 10"] },
         { cat: "3ª Mixta", groups: ["A"], courts: ["Pista 5", "Pista 6"] },
         { cat: "3ª Mixta", groups: ["B"], courts: ["Pista 8", "Pista 9"] },
-        { cat: "3ª Masculina", groups: ["A"], courts: ["Pista 11", "Pista 12", "Pista 13"] }
+        { cat: "3ª Masculina", groups: ["A", "B"], courts: ["Pista 11", "Pista 12", "Pista 13"] }
     ]
 };
 
