@@ -31,7 +31,7 @@
         document.addEventListener('keydown', (e) => {
             if (isAuthorized()) return; // Bypass if admin
 
-            /* // F12
+            // F12
             if (e.keyCode === 123) {
                 e.preventDefault();
                 return false;
@@ -40,7 +40,7 @@
             if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
                 e.preventDefault();
                 return false;
-            } */
+            }
             // Ctrl/Cmd + U (View Source)
             if ((e.ctrlKey || e.metaKey) && e.keyCode === 85) {
                 e.preventDefault();
