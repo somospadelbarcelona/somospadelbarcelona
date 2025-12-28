@@ -9,13 +9,13 @@ window.onunhandledrejection = function (event) {
     console.error("Unhandled Promise Rejection:", event.reason);
 };
 
-const APP_VERSION = "2.2.1-FORCE-SYNC"; // Cache Buster
+const APP_VERSION = "2.2.5-PROFESSIONAL-HOTFIX"; // Forced sync for data cleanup
 console.log(`🚀 SOMOSPADEL Dashboard v${APP_VERSION} inicializado.`);
 
 const RAW_TEAMS = {
     "4ª Femenina": {
-        "A": ["Cristina Matamala", "Olga Ferer", "Judith Esquerre", "Judit Pinad", "Anna Polo", "Anna Gaseni", "Noelia Omaque", "Laura Garcia"],
-        "B": ["Sandra Riera", "Yolanda Sanz", "Gemma Saavedra", "Mayte Vega", "Maria Lluisa Benlloch", "Enma Baijet", "Berta Canas", "Andrea Vivancos"],
+        "A": ["Cristina Matamala", "Olga Ferer", "Judith Esquerre", "Judit Pinad", "Anna Polo", "Anna Gaseni", "Noelia Omaque"],
+        "B": ["Sandra Riera", "Yolanda Sanz", "Gemma Saavedra", "Mayte Vega", "Maria Lluisa Benlloch", "Enma Baijet", "Berta Cañas", "Andrea Vivancos"],
         "C": ["Yoana Martinez", "Andrea Baraja", "Marta Bassons", "Joana Garcia", "Sheila Jodar", "Greis Caballero", "Marta Baijet", "Mireia Peligros"]
     },
     "3ª Masculina": {
@@ -28,13 +28,13 @@ const RAW_TEAMS = {
     },
     "3ª Mixta": {
         "A": ["Monica Muñoz", "Miki Muñoz", "David Navea", "Ainhoa Navea", "Manuel Gamero", "Zizi", "Falta Pareja", "Falta Pareja 1"],
-        "B": ["Ronny Benalcazar", "Carla Soto", "Juanjo Ruiz", "Mariona", "Ramon Mejias", "Lola Caro", "Olga Phyloma", "Mario Sanz"]
+        "B": ["Ronny Benalcazar", "Carla Soto", "Juanjo", "Mariona", "Ramon Mejias", "Lola Caro", "Olga Phylbma", "Mario Sanz"]
     },
     "4ª Mixta": {
         "A": ["Juanma Leon", "Raquel Fernandez", "David Asensio", "Anais Grebot", "Paula Alves", "Jose Luis Berga", "Alex Cuadra", "Pili Jorques"],
-        "B": ["Toni M", "Sonia", "Kevin", "Lorena", "Joaquim Salvat", "Monica", "Javier Frauca", "Natalia"],
+        "B": ["Toni Millan", "Sonia Lopez", "Kevin Mancilla", "Lorena Arenas", "Joaquim Salvat", "Monica", "Javier Frauca", "Natalia Guash"],
         "C": ["Abel Francesc", "Edith Alvarez", "Carlota Calabuig", "Jordi Seuba", "Enrique Fontoba", "Annabel Delgado", "Cristina Vidal", "Carlos Calasanz"],
-        "D": ["Marta Murigaren", "Jorge Rueda", "Coral Nova", "Ismael", "Luis Pino", "Raquel Perez", "Fernando Garcia", "Paz Lorezo"]
+        "D": ["Marta Murigaren", "Jorge Rueda", "Coral Nova", "Ismael Casares", "Luis Pino", "Raquel Perez", "Fernando Garcia", "Paz Lorezo"]
     }
 };
 
@@ -121,6 +121,14 @@ function generateInitialData() {
                     [[0, 1], [2, 3], [4, 5]], // Round 1
                     [[0, 2], [1, 4], [3, 5]], // Round 2
                     [[0, 3], [1, 5], [2, 4]]  // Round 3
+                ];
+            } else if (teamCount === 2) {
+                // Special case for groups with only 2 teams (e.g. 3ª Masculina B)
+                // They play each other 3 times to maintain schedule density
+                pairings = [
+                    [[0, 1]], // Match 1
+                    [[0, 1]], // Match 2
+                    [[0, 1]]  // Match 3
                 ];
             }
 
@@ -227,28 +235,29 @@ function generateInitialData() {
 }
 
 // --- STATE MANAGEMENT ---
+// Force initial setup if data is corrupt or missing or version changed
+(function checkVersionReset() {
+    const savedVersion = localStorage.getItem('APP_VERSION_SYNC');
+    if (savedVersion !== APP_VERSION) {
+        console.warn("New Version Detected. Clearing stale localStorage...");
+        localStorage.removeItem('tournamentData');
+        localStorage.setItem('APP_VERSION_SYNC', APP_VERSION);
+    }
+})();
+
 window.tournamentData = (function () {
     try {
         const stored = localStorage.getItem('tournamentData');
 
-        // If we have BAKED_DATA (official sync), and NO local storage, use BAKED_DATA
+        // If we have BAKED_DATA and NO local storage, use BAKED_DATA
         if (typeof BAKED_DATA !== 'undefined' && !stored) {
-            console.log("📦 Using BAKED_DATA version for initial load.");
+            console.log("📦 Using BAKED_DATA for fresh load.");
             return BAKED_DATA;
         }
 
         if (!stored) return null;
-        const parsed = JSON.parse(stored);
-
-        // If we have BAKED_DATA and local storage exists, but it's very old/missing fields, maybe upgrade?
-        // For now, we favor stored user edits once they exist.
-
-        if (parsed && parsed.matches && parsed.matches.every(m => m.stage)) return parsed; // Already new format
-        if (parsed && parsed.matches && parsed.matches.some(m => !m.stage)) return null; // Old format
-        return parsed;
-    } catch (e) {
-        return null;
-    }
+        return JSON.parse(stored);
+    } catch (e) { return null; }
 })();
 
 // Force initial setup if data is corrupt or missing
@@ -258,6 +267,11 @@ function validateAndRepairData() {
             console.warn("Invalid data structure detected. Using defaults...");
             tournamentData = generateInitialData();
             // YA NO GUARDAMOS AQUÍ. Esperamos a que Firebase nos diga si hay algo en la nube.
+        }
+
+        // DE-DUPLICATE CATEGORIES (Fix for duplicates issue)
+        if (tournamentData.categories) {
+            tournamentData.categories = [...new Set(tournamentData.categories)];
         }
 
         // Ensure all matches have necessary fields
@@ -363,6 +377,92 @@ validateAndRepairData();
         if (!tournamentData.appliedPatches.includes(PATCH_ID)) {
             tournamentData.appliedPatches.push(PATCH_ID);
         }
+        saveState();
+    }
+})();
+
+// --- PATCH: INJECT MISSING 3ª MASCULINA B MATCHES ---
+(function applyMissingMatchesPatch() {
+    if (!tournamentData) return;
+    const PATCH_ID = "FIX_3MASC_B_MISSING";
+    if (tournamentData.appliedPatches?.includes(PATCH_ID)) return;
+
+    console.log("🛠 APLICANDO PARCHE: Generando partidos faltantes para 3ª Masculina B...");
+
+    // Check if matches already exist
+    const existing = tournamentData.matches.filter(m => m.category === "3ª Masculina" && m.group === "B");
+    if (existing.length >= 3) {
+        console.log("✅ Partidos ya existen. Saltando parche.");
+        return;
+    }
+
+    const t1 = "Toni Palau / Carlos Asmadt";
+    const t2 = "Pablo Kellermann / Victor Iliana";
+
+    const newMatches = [
+        {
+            id: Date.now() + 1,
+            teamA: t1, teamB: t2,
+            scoreA: null, scoreB: null,
+            court: "Pista 13", time: "15:00",
+            category: "3ª Masculina", group: "B",
+            status: "pending", stage: "group"
+        },
+        {
+            id: Date.now() + 2,
+            teamA: t1, teamB: t2,
+            scoreA: null, scoreB: null,
+            court: "Pista 13", time: "15:30",
+            category: "3ª Masculina", group: "B",
+            status: "pending", stage: "group"
+        },
+        {
+            id: Date.now() + 3,
+            teamA: t1, teamB: t2,
+            scoreA: null, scoreB: null,
+            court: "Pista 13", time: "16:00",
+            category: "3ª Masculina", group: "B",
+            status: "pending", stage: "group"
+        }
+    ];
+
+    tournamentData.matches.push(...newMatches);
+
+    if (!tournamentData.appliedPatches) tournamentData.appliedPatches = [];
+    tournamentData.appliedPatches.push(PATCH_ID);
+
+    saveState();
+    console.log("✅ Parche aplicado: 3 partidos añadidos.");
+})();
+
+
+
+// --- PATCH: FIX TEAM NAME INCONSISTENCY (Coral vs Coral Nova) ---
+(function fixTeamNameInconsistency() {
+    if (!tournamentData) return;
+    const PATCH_ID = "FIX_CORAL_NAME_V1";
+    if (tournamentData.appliedPatches?.includes(PATCH_ID)) return;
+
+    console.log("🛠 APLICANDO PARCHE: Corrigiendo nombre de 'Coral'...");
+    let fixedCount = 0;
+    const wrongName = "Coral / Ismael Casares";
+    const correctName = "Coral Nova / Ismael Casares";
+
+    tournamentData.matches.forEach(m => {
+        if (m.teamA === wrongName) {
+            m.teamA = correctName;
+            fixedCount++;
+        }
+        if (m.teamB === wrongName) {
+            m.teamB = correctName;
+            fixedCount++;
+        }
+    });
+
+    if (fixedCount > 0) {
+        console.log(`✅ Se corrigieron ${fixedCount} instancias de nombres incorrectos.`);
+        if (!tournamentData.appliedPatches) tournamentData.appliedPatches = [];
+        tournamentData.appliedPatches.push(PATCH_ID);
         saveState();
     }
 })();
@@ -1195,6 +1295,9 @@ function renderStandings() {
         if (activeStandingsCat) categoriesToRender = [activeStandingsCat];
     }
 
+    // Dedup to prevent double rendering
+    categoriesToRender = [...new Set(categoriesToRender)];
+
     let foundAny = false;
 
     categoriesToRender.forEach(cat => {
@@ -1215,35 +1318,36 @@ function renderStandings() {
             section.className = 'group-section';
 
             let html = `
-                <h3 class="category-header">${cat} - GRUPO ${grp}</h3>
-                <div class="table-container">
-                    <table class="premium-table">
-                        <thead>
-                            <tr>
-                                <th>Equipo</th><th>PTS</th><th>PJ</th><th>PG</th><th>PP</th><th>DIF</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                <div class="group-card-container">
+                    <h3 class="category-header" style="border-bottom: 3px solid var(--brand-volt); display: block; width: 100%; color: #111; margin-bottom: 1rem; font-size: 1.4rem;">${cat} - GRUPO ${grp}</h3>
+                    <div class="table-container">
+                        <table class="premium-table">
+                            <thead>
+                                <tr>
+                                    <th>Equipo</th><th>PTS</th><th>PJ</th><th>PG</th><th>PP</th><th>DIF</th>
+                                </tr>
+                            </thead>
+                            <tbody>
             `;
 
             standings.forEach((team, index) => {
                 const isMatch = searchTerm && normalizeText(team.name).includes(searchTerm);
-                const highlightClass = isMatch ? 'search-highlight' : ''; // CSS needed
+                const highlightClass = isMatch ? 'search-highlight' : '';
                 const rankClass = index < 2 ? `rank-${index + 1} winner-highlight` : `rank-${index + 1}`;
 
                 html += `
                     <tr class="${rankClass} ${highlightClass}">
                         <td>${team.name}</td>
-                        <td>${team.points}</td>
+                        <td style="background: rgba(0,0,0,0.03);">${team.points}</td>
                         <td>${team.played}</td>
                         <td>${team.won}</td>
                         <td>${team.lost}</td>
-                        <td>${team.diff}</td>
+                        <td style="color: ${team.diff >= 0 ? '#16a34a' : '#dc2626'}">${team.diff}</td>
                     </tr>
                 `;
             });
 
-            html += `</tbody></table></div>`;
+            html += `</tbody></table></div></div>`;
             section.innerHTML = html;
             container.appendChild(section);
         });
