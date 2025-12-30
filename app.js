@@ -2109,3 +2109,59 @@ function exportBackup() {
         alert("❌ Error al generar el Excel: " + e.message);
     }
 }
+// --- DEVICE DETECTION & NOTIFICATION ---
+function detectAndNotifyDevice() {
+    // Only once per session to avoid annoying the user
+    if (sessionStorage.getItem('deviceToastShown')) return;
+
+    const width = window.innerWidth;
+    let msg = '';
+    let icon = '';
+
+    if (width <= 768) {
+        msg = 'Vista Móvil: Desliza las tablas para ver más';
+        icon = 'fa-mobile-alt';
+    } else if (width <= 1024) { // Tablet range
+        msg = 'Vista Tablet: Puedes hacer Zoom con dos dedos';
+        icon = 'fa-tablet-alt';
+    } else {
+        msg = 'Tip: Pulsa F11 para Pantalla Completa';
+        icon = 'fa-desktop';
+    }
+
+    if (msg) showToast(msg, icon);
+    sessionStorage.setItem('deviceToastShown', 'true');
+}
+
+function showToast(text, iconClass) {
+    if (document.getElementById('device-toast')) return;
+
+    const toast = document.createElement('div');
+    toast.id = 'device-toast';
+    toast.className = 'device-toast';
+    toast.innerHTML = `
+        <div class="toast-content">
+            <i class="fas ${iconClass}"></i>
+            <span>${text}</span>
+        </div>
+        <button onclick="this.parentElement.classList.remove('show'); setTimeout(() => this.parentElement.remove(), 500);" class="toast-close">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+
+    document.body.appendChild(toast);
+
+    // Animation in
+    setTimeout(() => toast.classList.add('show'), 100);
+
+    // Auto hide after 8s
+    setTimeout(() => {
+        if (toast && toast.parentElement) {
+            toast.classList.remove('show');
+            setTimeout(() => { if (toast.parentElement) toast.remove(); }, 500);
+        }
+    }, 8000);
+}
+
+// Init Device Detection
+window.addEventListener('load', detectAndNotifyDevice);

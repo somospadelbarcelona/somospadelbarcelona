@@ -3953,11 +3953,78 @@ tr.search-highlight.rank-2 td:first-child {
     }
 }
 
+/* --- TOAST NOTIFICATIONS (DEVICE TIPS) --- */
+.device-toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    /* Start off-screen */
+    background: rgba(20, 20, 20, 0.9);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 3px solid var(--brand-volt);
+    padding: 1rem 1.5rem;
+    border-radius: 50px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    opacity: 0;
+}
+
+.device-toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.toast-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.toast-content i {
+    color: var(--brand-volt);
+    font-size: 1.2rem;
+}
+
+.toast-close {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: #fff;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+}
+
+.toast-close:hover {
+    background: var(--brand-red);
+    transform: scale(1.1);
+}
+
 /* --- RESPONSIVE CORE FIXES (Mobile & Tablet) --- */
 
 @media (max-width: 1024px) {
+
+    /* Tablet Full Width Fix - "Necesito que se vea completamente" */
     .dashboard-container {
         padding: 1rem 1rem 6rem 1rem;
+        max-width: 100% !important;
+        /* Force full width on tablets */
+        width: 100%;
     }
 
     .main-header {
@@ -3975,6 +4042,7 @@ tr.search-highlight.rank-2 td:first-child {
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
         /* Firefox */
+        padding-inline-end: ;
     }
 
     .main-nav::-webkit-scrollbar {
