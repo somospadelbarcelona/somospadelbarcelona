@@ -3959,7 +3959,7 @@ tr.search-highlight.rank-2 td:first-child {
     .dashboard-container {
         padding: 1rem 1rem 6rem 1rem;
     }
-    
+
     .main-header {
         grid-template-columns: 1fr;
         gap: 1rem;
@@ -3973,17 +3973,24 @@ tr.search-highlight.rank-2 td:first-child {
         justify-content: flex-start;
         padding-bottom: 5px;
         -webkit-overflow-scrolling: touch;
-        scrollbar-width: none; /* Firefox */
+        scrollbar-width: none;
+        /* Firefox */
     }
-    
+
     .main-nav::-webkit-scrollbar {
-        display: none; /* Safari/Chrome */
+        display: none;
+        /* Safari/Chrome hide scrollbar visually but keep functionality */
     }
-    
+
+    /* Ensure the Admin button is accessible by adding right padding to container */
+    .main-nav {
+        padding-right: 2rem;
+    }
+
     .nav-btn {
         flex-shrink: 0;
     }
-    
+
     /* Live Feed adjustments */
     .live-feed-panel {
         width: 320px;
@@ -3992,9 +3999,11 @@ tr.search-highlight.rank-2 td:first-child {
 }
 
 @media (max-width: 768px) {
+
     /* Safe Area for iPhones */
     body {
-        padding-bottom: 100px; /* More space for ticker */
+        padding-bottom: 100px;
+        /* More space for ticker */
     }
 
     /* Header Compact */
@@ -4007,16 +4016,16 @@ tr.search-highlight.rank-2 td:first-child {
         gap: 0.5rem;
         text-align: center;
     }
-    
+
     .logo-event {
         width: 50px;
         height: 50px;
     }
-    
+
     .brand-title {
         font-size: 1.4rem;
     }
-    
+
     /* Stats Header Compact */
     .header-stats {
         width: 100%;
@@ -4025,47 +4034,50 @@ tr.search-highlight.rank-2 td:first-child {
         overflow-x: auto;
         padding-bottom: 5px;
     }
-    
+
     .stat-card {
         padding: 0.4rem 0.8rem;
         min-width: fit-content;
     }
-    
+
     .stat-value {
         font-size: 1.1rem;
     }
 
     /* Navigation Scrollable Horizontal */
     .main-nav {
-        margin: 0 -1rem; /* Full width edge to edge */
+        margin: 0 -1rem;
+        /* Full width edge to edge */
         padding: 0.5rem 1rem;
         border-radius: 0;
-        background: rgba(0,0,0,0.3);
+        background: rgba(0, 0, 0, 0.3);
         border-left: none;
         border-right: none;
     }
 
     /* Live Feed Panel - Mobile Modal Style */
     .live-feed-panel {
-        width: 90% !important; /* Force width */
+        width: 90% !important;
+        /* Force width */
         left: 5% !important;
         right: auto !important;
         top: 80px !important;
         max-height: 60vh;
     }
-    
+
     /* Matches Grid Single Column */
     .matches-grid {
         grid-template-columns: 1fr;
         gap: 1rem;
     }
-    
+
     /* Sponsors Resize */
     .sponsor-slide {
-        min-width: 180px; /* Smaller slides */
+        min-width: 180px;
+        /* Smaller slides */
         height: 120px;
     }
-    
+
     .sponsor-logo {
         max-height: 80px;
         max-width: 140px;
@@ -4075,27 +4087,32 @@ tr.search-highlight.rank-2 td:first-child {
     .brackets-wrapper {
         padding-bottom: 2rem;
     }
-    
+
     .bracket-scroll-container {
         padding: 1rem;
-        min-width: auto; /* Let it grow naturally or via JS */
-        width: max-content; /* Force width to content */
+        min-width: auto;
+        /* Let it grow naturally or via JS */
+        width: max-content;
+        /* Force width to content */
     }
 
     /* Tables Responsive Container */
     .table-container {
         border-radius: 0;
-        margin: 0 -1rem; /* Edge to edge */
+        margin: 0 -1rem;
+        /* Edge to edge */
         width: calc(100% + 2rem);
-        padding: 0 1rem; /* Internal padding */
+        padding: 0 1rem;
+        /* Internal padding */
     }
-    
-    .premium-table td, 
+
+    .premium-table td,
     .premium-table th {
         padding: 0.6rem 0.4rem;
-        font-size: 0.8rem; /* Smaller text */
+        font-size: 0.8rem;
+        /* Smaller text */
     }
-    
+
     .premium-table td:first-child {
         padding-left: 0.5rem;
         font-size: 0.85rem;
@@ -4104,25 +4121,28 @@ tr.search-highlight.rank-2 td:first-child {
     /* Ticker Fixes */
     .results-ticker {
         height: 50px;
-        bottom: 0px; /* Ensure sits on bottom */
+        bottom: 0px;
+        /* Ensure sits on bottom */
     }
-    
+
     .ticker-header {
         padding: 0 10px;
         font-size: 0.7rem;
         width: auto;
     }
-    
+
     .ticker-header span {
-        display: none; /* Hide text, keep icon */
+        display: none;
+        /* Hide text, keep icon */
     }
-    
+
     .ticker-header i {
-        display: block; /* Ensure icon shows */
+        display: block;
+        /* Ensure icon shows */
         font-size: 1.2rem;
         margin: 0;
     }
-    
+
     .ticker-content {
         font-size: 0.8rem;
     }
@@ -4132,7 +4152,7 @@ tr.search-highlight.rank-2 td:first-child {
         padding: 1rem;
         gap: 1.5rem;
     }
-    
+
     .rule-card-premium {
         width: 100%;
         padding: 1.5rem;
@@ -4151,11 +4171,12 @@ tr.search-highlight.rank-2 td:first-child {
 }
 
 @media (max-width: 380px) {
+
     /* Small Mobiles */
     .brand-title {
         font-size: 1.2rem;
     }
-    
+
     .nav-btn {
         padding: 0.5rem 0.8rem;
         font-size: 0.75rem;
