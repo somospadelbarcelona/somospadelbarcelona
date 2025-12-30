@@ -9,7 +9,7 @@ window.onunhandledrejection = function (event) {
     console.error("Unhandled Promise Rejection:", event.reason);
 };
 
-const APP_VERSION = "3.0.0-STRICT-SCHEDULE"; // Force clean regeneration
+const APP_VERSION = "3.1.0-SCOPED-EDIT"; // Force clean regeneration
 console.log(`🚀 SOMOSPADEL Dashboard v${APP_VERSION} inicializado.`);
 
 // --- LIVE USERS GADGET LOGIC (ENHANCED) ---
@@ -1584,16 +1584,23 @@ function editTeamName(matchId, teamKey) {
     const newName = prompt("Editar nombre del jugador/pareja:", currentName);
 
     if (newName && newName.trim() !== "" && newName !== currentName) {
-        if (confirm(`¿Cambiar "${currentName}" por "${newName}" en TODOS los partidos del torneo?`)) {
-            // Global Update
+        if (confirm(`¿Cambiar "${currentName}" por "${newName}" en este grupo/categoría?`)) {
+            // Scoped Update
             let count = 0;
             tournamentData.matches.forEach(m => {
+                // 1. Strict Category Check
+                if (m.category !== match.category) return;
+
+                // 2. Strict Group Scope Check (if both are group matches)
+                // This prevents "Pareja 1" in Group A from affecting "Pareja 1" in Group B
+                if (match.stage === 'group' && m.stage === 'group' && m.group !== match.group) return;
+
                 if (m.teamA === currentName) { m.teamA = newName; count++; }
                 if (m.teamB === currentName) { m.teamB = newName; count++; }
             });
             alert(`Actualizado en ${count} partidos.`);
         } else {
-            // Local Update
+            // Local Update (Only this specific match)
             match[teamKey] = newName;
         }
         saveState();
