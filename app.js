@@ -9,32 +9,58 @@ window.onunhandledrejection = function (event) {
     console.error("Unhandled Promise Rejection:", event.reason);
 };
 
-const APP_VERSION = "2.2.5-PROFESSIONAL-HOTFIX"; // Forced sync for data cleanup
+const APP_VERSION = "3.0.0-STRICT-SCHEDULE"; // Force clean regeneration
 console.log(`🚀 SOMOSPADEL Dashboard v${APP_VERSION} inicializado.`);
+
+// --- LIVE USERS GADGET LOGIC ---
+function initLiveUsersGadget() {
+    const el = document.getElementById('liveUsersCount');
+    if (!el) return;
+
+    let users = 42; // Base number
+
+    // Initial set
+    el.textContent = users;
+
+    setInterval(() => {
+        // Random fluctuation between -2 and +3
+        const change = Math.floor(Math.random() * 6) - 2;
+        users = Math.max(35, Math.min(68, users + change)); // Keep between 35 and 68
+
+        el.style.opacity = '0';
+        setTimeout(() => {
+            el.textContent = users;
+            el.style.opacity = '1';
+        }, 300);
+
+    }, 5000); // Update every 5s
+}
+
+document.addEventListener('DOMContentLoaded', initLiveUsersGadget);
 
 const RAW_TEAMS = {
     "4ª Femenina": {
-        "A": ["Cristina Matamala", "Olga Ferer", "Judith Esquerre", "Judit Pinad", "Anna Polo", "Anna Gaseni", "Noelia Omaque"],
-        "B": ["Sandra Riera", "Yolanda Sanz", "Gemma Saavedra", "Mayte Vega", "Maria Lluisa Benlloch", "Enma Baijet", "Berta Cañas", "Andrea Vivancos"],
-        "C": ["Yoana Martinez", "Andrea Baraja", "Marta Bassons", "Joana Garcia", "Sheila Jodar", "Greis Caballero", "Marta Baijet", "Mireia Peligros"]
+        "A": ["Marta Baijet", "Mireia Peligros", "Judith Esquerre", "Judit Pinad", "Marta Bassons", "Joana Garcia", "Noelia Ornaque", "Laura Garcia"],
+        "B": ["Sandra Riera", "Yolanda Sanz", "Gemma Saavedra", "Mayte Vega", "Yoana Martinez", "Andrea Baraja", "Berta Cañas", "Andrea Vivancos"],
+        "C": ["Maria Lluisa Benlloch", "Enma Baijet", "Anna Polo", "Anna Gaseni", "Sheila Jodar", "Greis Caballero", "Cristina Matamala", "Olga Ferre"]
     },
     "3ª Masculina": {
-        "A": ["Angel Millan", "Albert Estrella", "Gerardo Jaenes", "Pablo Mena", "Sergio Serrano", "Fernando Gomez", "Eloy Arrabal", "Ness Rodera"],
-        "B": ["Toni Palau", "Carlos Asmadt", "Pablo Kellermann", "Victor Iliana"]
+        "A": ["Angel Millan", "Albert Estrella", "Gerardo Jaenes", "Pablo Mena", "Sergio Serrano", "Fernando Gomez", "Pablo Kellermann", "Victor Iliana"],
+        "B": ["Toni Palau", "Carlos Asmadt", "Eloy Arrabal", "Ness Rodera", "Joel Haro", "Albert Estrella Padre", "Falta Pareja 1", "Falta Pareja 2"]
     },
     "4ª Masculina": {
-        "A": ["Sergio Albert", "Joan Bernard", "Oscar Cosco", "Javier Hita", "Vladimir Starciuc", "Bernat Pecharoman", "Juan Manuel Lopez", "Fernando Rodriguez"],
-        "B": ["Adria Boza", "Marc Pijuan", "Cristian Lasheras", "Manu Sanhez", "Xavi Perea", "Bryan Davila", "Dani Astasio", "Marc Valldosera"]
+        "A": ["Sergio Albert", "Joan Bernard", "Adria Boza", "Marc Pijuan", "Xavi Perea", "Bryan Davila", "Cristian Lasheras", "Manu Sanhez"],
+        "B": ["Juan Manuel Lopez", "Fernando Rodriguez", "Vladimir Starciuc", "Bernat Pecharoman", "Oscar Cosco", "Javier Hita", "Dani Astasio", "Marc Valldosera"]
     },
     "3ª Mixta": {
-        "A": ["Monica Muñoz", "Miki Muñoz", "David Navea", "Ainhoa Navea", "Manuel Gamero", "Zizi", "Falta Pareja", "Falta Pareja 1"],
-        "B": ["Ronny Benalcazar", "Carla Soto", "Juanjo", "Mariona", "Ramon Mejias", "Lola Caro", "Olga Phylbma", "Mario Sanz"]
+        "A": ["Juanjo Jimenez", "Mariona Reyes", "David Navea", "Ainhoa Navea", "Manuel Gamero", "Zizi", "Ronny Benalcazar", "Carla Soto"],
+        "B": ["Monica Muñoz", "Miki Munoz", "Jordi Diaz", "Cristina Garcia", "Ramon Mejias", "Lola Caro", "Olga Pylpchuk", "Mario Sanz"]
     },
     "4ª Mixta": {
-        "A": ["Juanma Leon", "Raquel Fernandez", "David Asensio", "Anais Grebot", "Paula Alves", "Jose Luis Berga", "Alex Cuadra", "Pili Jorques"],
-        "B": ["Toni Millan", "Sonia Lopez", "Kevin Mancilla", "Lorena Arenas", "Joaquim Salvat", "Monica", "Javier Frauca", "Natalia Guash"],
-        "C": ["Abel Francesc", "Edith Alvarez", "Carlota Calabuig", "Jordi Seuba", "Enrique Fontoba", "Annabel Delgado", "Cristina Vidal", "Carlos Calasanz"],
-        "D": ["Marta Murigaren", "Jorge Rueda", "Coral Nova", "Ismael Casares", "Luis Pino", "Raquel Perez", "Fernando Garcia", "Paz Lorezo"]
+        "A": ["Luis Pino", "Raquel Perez", "Joaquim Salvat", "Monica", "Paula Alves", "Jose Luis Berga", "Fernando Garcia", "Paz Lorezo"],
+        "B": ["Toni Millan", "Sonia Lopez", "David Asensio", "Anais Grebot", "Kevin Mancilla", "Lorena Arenas", "Abel Francesc", "Edith Alvarez"],
+        "C": ["Juanma Leon", "Raquel Fernandez", "Carlota Calabuig", "Jordi Seuba", "Enrique Fontoba", "Annabel Delgado", "Cristina Vidal", "Carlos Calasanz"],
+        "D": ["Marta Murigaren", "Jorge Rueda", "Coral Nova", "Ismael Casares", "Alex Cuadra", "Pili Jorques", "Javier Frauca", "Natalia Guash"]
     }
 };
 
@@ -53,7 +79,8 @@ const SCHEDULE_CONFIG = {
         { cat: "4ª Femenina", groups: ["C"], courts: ["Pista 7", "Pista 10"] },
         { cat: "3ª Mixta", groups: ["A"], courts: ["Pista 5", "Pista 6"] },
         { cat: "3ª Mixta", groups: ["B"], courts: ["Pista 8", "Pista 9"] },
-        { cat: "3ª Masculina", groups: ["A", "B"], courts: ["Pista 11", "Pista 12", "Pista 13"] }
+        { cat: "3ª Masculina", groups: ["A"], courts: ["Pista 11", "Pista 12"] },
+        { cat: "3ª Masculina", groups: ["B"], courts: ["Pista 13", "Pista 14"] }
     ]
 };
 
@@ -163,29 +190,93 @@ function generateInitialData() {
         const groupList = Object.keys(groups).sort();
         const numGroups = groupList.length;
 
-        if (numGroups === 4 || numGroups === 3) {
+        // STRICT CONFIGURATION FROM USER
+        const PLAYOFF_CONFIG = {
+            "4ª Femenina": {
+                hasQuarters: true,
+                q_courts: ["Pista 3", "Pista 6", "Pista 8", "Pista 9"],
+                q_time: "16:30",
+                s_courts: ["Pista 3", "Pista 6"],
+                s_time: "17:00",
+                f_court: "Pista 3",
+                f_time: "17:45"
+            },
+            "4ª Mixta": {
+                hasQuarters: true,
+                q_courts: ["Pista 1", "Pista 4", "Pista 7", "Pista 10"],
+                q_time: "16:30",
+                s_courts: ["Pista 1", "Pista 4"],
+                s_time: "17:00",
+                f_court: "Pista 1",
+                f_time: "17:45"
+            },
+            "4ª Masculina": {
+                hasQuarters: false,
+                s_courts: ["Pista 2", "Pista 5"],
+                s_time: "16:30", // Special early time
+                f_court: "Pista 2",
+                f_time: "17:15" // Special early time
+            },
+            "3ª Mixta": {
+                hasQuarters: false,
+                s_courts: ["Pista 7", "Pista 10"],
+                s_time: "17:00",
+                f_court: "Pista 5",
+                f_time: "17:45"
+            },
+            "3ª Masculina": {
+                hasQuarters: false,
+                s_courts: ["Pista 8", "Pista 9"],
+                s_time: "17:00",
+                f_court: "Pista 6",
+                f_time: "17:45"
+            }
+        };
+
+        const config = PLAYOFF_CONFIG[category];
+
+        if (config) {
             // Quarters
-            for (let i = 1; i <= 4; i++) {
-                data.matches.push({
-                    id: 10000 + data.matches.length,
-                    matchName: `Cuartos ${i}`,
-                    teamA: `TBD Q${i}A`, teamB: `TBD Q${i}B`,
-                    scoreA: null, scoreB: null,
-                    status: "pending", stage: "quarter",
-                    category: category, time: "16:30", court: "Pista ?"
-                });
+            if (config.hasQuarters) {
+                const qCourts = config.q_courts || ["Pista ?", "Pista ?", "Pista ?", "Pista ?"];
+                for (let i = 1; i <= 4; i++) {
+                    data.matches.push({
+                        id: 10000 + data.matches.length,
+                        matchName: `Cuartos ${i}`,
+                        teamA: `TBD Q${i}A`, teamB: `TBD Q${i}B`,
+                        scoreA: null, scoreB: null,
+                        status: "pending", stage: "quarter",
+                        category: category,
+                        time: config.q_time || "16:30",
+                        court: qCourts[i - 1] || "Pista ?"
+                    });
+                }
             }
+
             // Semis
+            const sCourts = config.s_courts || ["Pista ?", "Pista ?"];
             for (let i = 1; i <= 2; i++) {
+                let teamA, teamB;
+                if (config.hasQuarters) {
+                    teamA = `Ganador Cuartos ${i * 2 - 1}`;
+                    teamB = `Ganador Cuartos ${i * 2}`;
+                } else {
+                    teamA = `TBD S${i}A`;
+                    teamB = `TBD S${i}B`;
+                }
+
                 data.matches.push({
                     id: 20000 + data.matches.length,
                     matchName: `Semi ${i}`,
-                    teamA: `Ganador Cuartos ${i * 2 - 1}`, teamB: `Ganador Cuartos ${i * 2}`,
+                    teamA: teamA, teamB: teamB,
                     scoreA: null, scoreB: null,
                     status: "pending", stage: "semi",
-                    category: category, time: "17:30", court: "Pista ?"
+                    category: category,
+                    time: config.s_time || "17:00",
+                    court: sCourts[i - 1] || "Pista ?"
                 });
             }
+
             // Final
             data.matches.push({
                 id: 30000 + data.matches.length,
@@ -193,31 +284,13 @@ function generateInitialData() {
                 teamA: "Ganador Semi 1", teamB: "Ganador Semi 2",
                 scoreA: null, scoreB: null,
                 status: "pending", stage: "final",
-                category: category, time: "18:30", court: "Pista 1"
+                category: category,
+                time: config.f_time || "17:45",
+                court: config.f_court || "Pista 1"
             });
-        } else if (numGroups === 2 || category === "3ª Masculina") {
-            // Semis
-            for (let i = 1; i <= 2; i++) {
-                data.matches.push({
-                    id: 20000 + data.matches.length,
-                    matchName: `Semi ${i}`,
-                    teamA: `TBD S${i}A`, teamB: `TBD S${i}B`,
-                    scoreA: null, scoreB: null,
-                    status: "pending", stage: "semi",
-                    category: category, time: category === "4ª Masculina" ? "16:30" : "17:30", court: "Pista ?"
-                });
-            }
-            // Final
-            data.matches.push({
-                id: 30000 + data.matches.length,
-                matchName: "Final",
-                teamA: "Ganador Semi 1", teamB: "Ganador Semi 2",
-                scoreA: null, scoreB: null,
-                status: "pending", stage: "final",
-                category: category, time: category === "4ª Masculina" ? "17:15" : "18:30", court: "Pista 1"
-            });
+
         } else if (numGroups === 1) {
-            // Final Directly
+            // Fallback for single group direct final (unlikely given list, but safety)
             data.matches.push({
                 id: 30000 + data.matches.length,
                 matchName: "Final",
@@ -250,10 +323,11 @@ window.tournamentData = (function () {
         const stored = localStorage.getItem('tournamentData');
 
         // If we have BAKED_DATA and NO local storage, use BAKED_DATA
-        if (typeof BAKED_DATA !== 'undefined' && !stored) {
+        // DISABLED FOR RESTORATION: Always force generation from RAW_TEAMS in app.js
+        /* if (typeof BAKED_DATA !== 'undefined' && !stored) {
             console.log("📦 Using BAKED_DATA for fresh load.");
             return BAKED_DATA;
-        }
+        } */
 
         if (!stored) return null;
         return JSON.parse(stored);
@@ -337,135 +411,8 @@ function forceSyncSchedule() {
 validateAndRepairData();
 
 // --- PATCH: FORCE OFFICIAL PLAYOFF SCHEDULE (ROBUST VERSION) ---
-(function applyPlayoffPatch() {
-    const PATCH_ID = "20251228-SCHEDULE-V3-ROBUST";
-    if (tournamentData && tournamentData.appliedPatches?.includes(PATCH_ID)) return;
+// Patches removed as data is now fresh
 
-    console.log("🛠 APLICANDO PARCHE DE PROGRAMACIÓN OFICIAL (V3)...");
-    if (typeof BAKED_DATA !== 'undefined' && BAKED_DATA.matches) {
-        let updatedCount = 0;
-
-        // Helper to normalize category for safer matching (e.g. 4ª vs 4º)
-        const norm = (s) => (s || "").toLowerCase().trim()
-            .replace(/[ªº]/g, 'a')
-            .replace(/\s+/g, '');
-
-        BAKED_DATA.matches.filter(m => m.stage && m.stage !== 'group').forEach(official => {
-            // Try matching by ID first, then by Category + Stage + Name
-            let live = tournamentData.matches.find(lm => lm.id == official.id);
-
-            if (!live) {
-                live = tournamentData.matches.find(lm =>
-                    norm(lm.category) === norm(official.category) &&
-                    lm.stage === official.stage &&
-                    (lm.matchName || "") === (official.matchName || "")
-                );
-            }
-
-            if (live) {
-                // Force update court and time
-                live.time = official.time;
-                live.court = official.court;
-                updatedCount++;
-                console.log(`  [PATCH] Match ${official.id} (${official.category} ${official.matchName || ''}) -> ${official.time} en ${official.court}`);
-            }
-        });
-
-        console.log(`✅ Parche aplicado: ${updatedCount} partidos actualizados.`);
-
-        if (!tournamentData.appliedPatches) tournamentData.appliedPatches = [];
-        if (!tournamentData.appliedPatches.includes(PATCH_ID)) {
-            tournamentData.appliedPatches.push(PATCH_ID);
-        }
-        saveState();
-    }
-})();
-
-// --- PATCH: INJECT MISSING 3ª MASCULINA B MATCHES ---
-(function applyMissingMatchesPatch() {
-    if (!tournamentData) return;
-    const PATCH_ID = "FIX_3MASC_B_MISSING";
-    if (tournamentData.appliedPatches?.includes(PATCH_ID)) return;
-
-    console.log("🛠 APLICANDO PARCHE: Generando partidos faltantes para 3ª Masculina B...");
-
-    // Check if matches already exist
-    const existing = tournamentData.matches.filter(m => m.category === "3ª Masculina" && m.group === "B");
-    if (existing.length >= 3) {
-        console.log("✅ Partidos ya existen. Saltando parche.");
-        return;
-    }
-
-    const t1 = "Toni Palau / Carlos Asmadt";
-    const t2 = "Pablo Kellermann / Victor Iliana";
-
-    const newMatches = [
-        {
-            id: Date.now() + 1,
-            teamA: t1, teamB: t2,
-            scoreA: null, scoreB: null,
-            court: "Pista 13", time: "15:00",
-            category: "3ª Masculina", group: "B",
-            status: "pending", stage: "group"
-        },
-        {
-            id: Date.now() + 2,
-            teamA: t1, teamB: t2,
-            scoreA: null, scoreB: null,
-            court: "Pista 13", time: "15:30",
-            category: "3ª Masculina", group: "B",
-            status: "pending", stage: "group"
-        },
-        {
-            id: Date.now() + 3,
-            teamA: t1, teamB: t2,
-            scoreA: null, scoreB: null,
-            court: "Pista 13", time: "16:00",
-            category: "3ª Masculina", group: "B",
-            status: "pending", stage: "group"
-        }
-    ];
-
-    tournamentData.matches.push(...newMatches);
-
-    if (!tournamentData.appliedPatches) tournamentData.appliedPatches = [];
-    tournamentData.appliedPatches.push(PATCH_ID);
-
-    saveState();
-    console.log("✅ Parche aplicado: 3 partidos añadidos.");
-})();
-
-
-
-// --- PATCH: FIX TEAM NAME INCONSISTENCY (Coral vs Coral Nova) ---
-(function fixTeamNameInconsistency() {
-    if (!tournamentData) return;
-    const PATCH_ID = "FIX_CORAL_NAME_V1";
-    if (tournamentData.appliedPatches?.includes(PATCH_ID)) return;
-
-    console.log("🛠 APLICANDO PARCHE: Corrigiendo nombre de 'Coral'...");
-    let fixedCount = 0;
-    const wrongName = "Coral / Ismael Casares";
-    const correctName = "Coral Nova / Ismael Casares";
-
-    tournamentData.matches.forEach(m => {
-        if (m.teamA === wrongName) {
-            m.teamA = correctName;
-            fixedCount++;
-        }
-        if (m.teamB === wrongName) {
-            m.teamB = correctName;
-            fixedCount++;
-        }
-    });
-
-    if (fixedCount > 0) {
-        console.log(`✅ Se corrigieron ${fixedCount} instancias de nombres incorrectos.`);
-        if (!tournamentData.appliedPatches) tournamentData.appliedPatches = [];
-        tournamentData.appliedPatches.push(PATCH_ID);
-        saveState();
-    }
-})();
 
 let activeMatchesCat = null;
 let activeStandingsCat = null;
@@ -800,6 +747,7 @@ function renderLiveFeed() {
 // --- CORE LOGIC ---
 
 function getStandings(category, group) {
+    window.getStandings = getStandings; // Exponer para Chatbot
     const matches = tournamentData.matches.filter(m => m.category === category && m.group === group);
     const stats = {};
 

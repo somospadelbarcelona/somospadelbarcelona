@@ -114,6 +114,18 @@
                 </div>
             </div>
 
+            <!-- Live Users Gadget -->
+            <div class="stat-card live-users-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value" id="liveUsersCount">--</div>
+                    <div class="stat-label">Usuarios Online</div>
+                </div>
+                <div class="online-dot"></div>
+            </div>
+
 
             <div id="cloud-status-indicator"
                 style="font-size: 0.75rem; font-weight: 800; color: #888; display: flex; align-items: center; gap: 5px; background: rgba(0,0,0,0.3); padding: 5px 12px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1);">
@@ -796,12 +808,12 @@
     <script src="stats-integration.js"></script>
 
     <script src="baked_data.js?v=300"></script>
-    <script src="app.js?v=300"></script>
-    <script src="mascot-bot.js?v=1"></script>
+    <script src="app.js?v=317"></script>
+    <script src="mascot-bot.js?v=317"></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js');
+    navigator.serviceWorker.register('sw.js');
             });
         }
     </script>
