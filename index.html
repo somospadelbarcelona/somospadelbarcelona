@@ -116,14 +116,15 @@
 
             <!-- Live Users Gadget -->
             <div class="stat-card live-users-card">
-                <div class="stat-icon">
+                <div class="stat-icon pulse-icon">
                     <i class="fas fa-users"></i>
                 </div>
                 <div class="stat-content">
                     <div class="stat-value" id="liveUsersCount">--</div>
                     <div class="stat-label">Usuarios Online</div>
+                    <div id="userLocationFeed" class="user-location-feed"></div>
                 </div>
-                <div class="online-dot"></div>
+                <div class="online-dot-ring"></div>
             </div>
 
 
@@ -813,7 +814,7 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js');
+                navigator.serviceWorker.register('sw.js');
             });
         }
     </script>

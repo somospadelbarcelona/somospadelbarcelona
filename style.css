@@ -566,32 +566,105 @@ body {
 /* --- LIVE USERS GADGET --- */
 .live-users-card {
     position: relative;
-    border: 1px solid rgba(204, 255, 0, 0.3) !important;
-    background: rgba(204, 255, 0, 0.05) !important;
+    border: 1px solid rgba(204, 255, 0, 0.4) !important;
+    background: linear-gradient(135deg, rgba(204, 255, 0, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%) !important;
+    overflow: hidden;
+    min-width: 180px;
 }
 
 .live-users-card .stat-value {
     color: var(--brand-volt);
-    text-shadow: 0 0 10px rgba(204, 255, 0, 0.5);
+    text-shadow: 0 0 15px rgba(204, 255, 0, 0.6);
+    font-size: 1.8rem;
+    transition: transform 0.2s;
 }
 
-.online-dot {
+.live-users-card:hover .stat-value {
+    transform: scale(1.1);
+}
+
+.online-dot-ring {
     position: absolute;
     top: 10px;
     right: 10px;
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     background: #22c55e;
     border-radius: 50%;
     box-shadow: 0 0 10px #22c55e;
-    animation: pulse-online 2s infinite;
 }
 
-@keyframes pulse-online {
-    0% { transform: scale(0.95); opacity: 0.7; }
-    50% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 15px #22c55e; }
-    100% { transform: scale(0.95); opacity: 0.7; }
+.online-dot-ring::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border: 2px solid #22c55e;
+    border-radius: 50%;
+    animation: ripple 1.5s infinite;
+    opacity: 0;
 }
+
+@keyframes ripple {
+    0% {
+        transform: scale(0.5);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* Location Feed Notification */
+.user-location-feed {
+    height: 20px;
+    margin-top: 4px;
+    font-size: 0.65rem;
+    color: #fff;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 0.8;
+}
+
+.location-toast {
+    animation: slideUpFade 3s ease-in-out forwards;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.location-toast i {
+    color: var(--brand-volt);
+}
+
+@keyframes slideUpFade {
+    0% {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+
+    10% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    80% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+}
+
 
 /* --- LIVE FEED PANEL - INTEGRATED PREMIUM --- */
 .live-feed-panel {

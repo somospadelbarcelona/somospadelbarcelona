@@ -12,28 +12,49 @@ window.onunhandledrejection = function (event) {
 const APP_VERSION = "3.0.0-STRICT-SCHEDULE"; // Force clean regeneration
 console.log(`🚀 SOMOSPADEL Dashboard v${APP_VERSION} inicializado.`);
 
-// --- LIVE USERS GADGET LOGIC ---
+// --- LIVE USERS GADGET LOGIC (ENHANCED) ---
 function initLiveUsersGadget() {
     const el = document.getElementById('liveUsersCount');
+    const feed = document.getElementById('userLocationFeed');
     if (!el) return;
 
-    let users = 42; // Base number
+    // Base Simulation Config
+    let baseUsers = 38; // Bots baseline (30-40 range)
+    let activeUsers = baseUsers + Math.floor(Math.random() * 10);
 
-    // Initial set
-    el.textContent = users;
+    const locations = [
+        "Barcelona", "L'Hospitalet", "Badalona", "Terrassa", "Sabadell", "Mataró",
+        "Santa Coloma", "Cornellà", "Sant Boi", "Castelldefels", "Viladecans", "El Prat",
+        "Granollers", "Cerdanyola", "Mollet", "Vic", "Manresa", "Girona", "Tarragona"
+    ];
 
-    setInterval(() => {
-        // Random fluctuation between -2 and +3
-        const change = Math.floor(Math.random() * 6) - 2;
-        users = Math.max(35, Math.min(68, users + change)); // Keep between 35 and 68
+    // Initial Set
+    el.textContent = activeUsers;
 
-        el.style.opacity = '0';
-        setTimeout(() => {
-            el.textContent = users;
-            el.style.opacity = '1';
-        }, 300);
+    // Volatile Update Loop (Every 2-4 seconds)
+    const updateLoop = () => {
+        // High volatility: change by -3 to +5
+        const delta = Math.floor(Math.random() * 9) - 3;
+        activeUsers = Math.max(32, Math.min(85, activeUsers + delta));
 
-    }, 5000); // Update every 5s
+        // Render Count
+        el.textContent = activeUsers;
+
+        // Randomly show "New User" toast (30% chance)
+        if (Math.random() > 0.7 && feed) {
+            const loc = locations[Math.floor(Math.random() * locations.length)];
+            feed.innerHTML = `
+                <div class="location-toast">
+                    <i class="fas fa-map-marker-alt"></i> Entra desde <b>${loc}</b>
+                </div>
+            `;
+        }
+
+        // Variable timing for organic feel
+        setTimeout(updateLoop, Math.random() * 2000 + 2000);
+    };
+
+    updateLoop();
 }
 
 document.addEventListener('DOMContentLoaded', initLiveUsersGadget);
