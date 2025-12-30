@@ -4019,21 +4019,27 @@ tr.search-highlight.rank-2 td:first-child {
 
 @media (max-width: 1280px) {
 
-    /* Increased from 1024px to cover iPad Pro and large tablets */
     /* Tablet Full Width Fix - "Necesito que se vea completamente" */
+    /* Updated for Legacy Tablet Content Overflow Support */
     .dashboard-container {
         padding: 0.5rem !important;
         /* Minimal padding */
-        max-width: 100vw !important;
-        /* Force viewport width */
-        width: 100vw !important;
+        max-width: 100% !important;
+        /* Use % for better compat */
+        width: 100% !important;
         margin: 0 !important;
-        overflow-x: hidden !important;
+        overflow-x: auto !important;
+        /* Allow scroll if content is too wide */
     }
 
+    /* Force Body to fit */
+    html,
     body {
-        overflow-x: hidden;
         width: 100%;
+        overflow-x: hidden;
+        /* Prevent body scroll, let container scroll */
+        -webkit-text-size-adjust: 100%;
+        /* Fix font scaling */
     }
 
     .main-header {
@@ -4042,6 +4048,7 @@ tr.search-highlight.rank-2 td:first-child {
         height: auto;
         position: relative;
         padding: 0.5rem;
+        width: 100%;
     }
 
     /* Adapt Navigation for Tablet */
@@ -4052,7 +4059,8 @@ tr.search-highlight.rank-2 td:first-child {
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
         /* Firefox */
-        padding-inline-end: ;
+        padding-right: 2rem;
+        /* Ensure space for end items */
     }
 
     .main-nav::-webkit-scrollbar {
@@ -4073,6 +4081,22 @@ tr.search-highlight.rank-2 td:first-child {
     .live-feed-panel {
         width: 320px;
         right: 1rem;
+    }
+
+    /* SCHEDULE SCROLL FIX */
+    .schedule-grid-container {
+        display: block;
+        width: 100%;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+    }
+
+    .schedule-grid {
+        display: grid;
+        min-width: max-content;
+        padding-right: 40px;
     }
 }
 
