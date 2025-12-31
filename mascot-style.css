@@ -7,7 +7,8 @@
 
 #padel-bot-trigger {
     position: fixed;
-    bottom: 30px;
+    bottom: 110px;
+    /* Elevated above 90px ticker */
     right: 30px;
     width: 75px;
     height: 75px;
@@ -15,7 +16,8 @@
     border: 3px solid var(--bot-glow);
     border-radius: 50%;
     cursor: pointer;
-    z-index: 10000;
+    z-index: 10005;
+    /* Above ticker (10001) */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -69,7 +71,8 @@
 
 #padel-bot-window {
     position: fixed;
-    bottom: 110px;
+    bottom: 195px;
+    /* Elevated relative to trigger */
     right: 30px;
     width: 380px;
     height: 550px;
@@ -77,7 +80,7 @@
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 24px;
-    z-index: 9999;
+    z-index: 10006;
     display: flex;
     flex-direction: column;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);

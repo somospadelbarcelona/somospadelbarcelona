@@ -45,8 +45,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Torneo somospadel BCN</title>
 
-    <!-- Security Layer (Loaded First) -->
-    <script src="security.js"></script>
+    <!-- Security Layer (Shield Activated) -->
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none';">
 
@@ -678,31 +677,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* Category Specific Colors */
-        .tag-4a-femenina {
-            background: var(--cat-4fem) !important;
-            color: white !important;
-        }
-
-        .tag-4a-mixta {
-            background: var(--cat-4mix) !important;
-            color: black !important;
-        }
-
-        .tag-4a-masculina {
-            background: var(--cat-4masc) !important;
-            color: black !important;
-        }
-
-        .tag-3a-mixta {
-            background: var(--cat-3mix) !important;
-            color: black !important;
-        }
-
-        .tag-3a-masculina {
-            background: var(--cat-3masc) !important;
-            color: white !important;
-        }
 
         .ticker-status-live {
             color: #ff3b30;
@@ -815,126 +789,18 @@
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            /* existing styles will proceed... */
-
-            .ticker-results {
-                display: flex;
-                gap: 2rem;
-                padding: 0 2rem;
-            }
-
-            .ticker-item {
-                display: flex;
-                align-items: center;
-                background: rgba(255, 255, 255, 0.03);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                border-radius: 6px;
-                padding: 0.4rem 1rem;
-                gap: 1rem;
-                cursor: pointer;
-                transition: all 0.3s;
-                position: relative;
-                overflow: hidden;
-            }
-
-            .ticker-item:hover {
-                border-color: var(--brand-volt);
-                background: rgba(204, 255, 0, 0.1);
-                transform: translateY(-2px);
-            }
-
-            .ticker-cat-tag {
-                font-size: 0.6rem;
-                font-weight: 900;
-                text-transform: uppercase;
-                padding: 2px 6px;
-                border-radius: 3px;
-                background: rgba(255, 255, 255, 0.1);
-                color: #fff;
-                white-space: nowrap;
-            }
-
-            .ticker-cat-3a-masculina .ticker-cat-tag {
-                background: var(--cat-3masc);
-                color: white;
-            }
-
-            .ticker-match-content {
-                display: flex;
-                align-items: center;
-                gap: 0.8rem;
-                white-space: nowrap;
-            }
-
-            .ticker-team {
-                font-weight: 700;
-                font-size: 0.9rem;
-            }
-
-            .ticker-winner {
-                color: #fff;
-            }
-
-            .ticker-loser {
-                color: #666;
-            }
-
-            .ticker-score {
-                font-family: var(--font-nums);
-                font-weight: 900;
-                color: var(--brand-volt);
-                font-size: 1.1rem;
-                padding: 0 0.5rem;
-                text-shadow: 0 0 10px rgba(204, 255, 0, 0.3);
-            }
-
-            .ticker-status-next {
-                background: rgba(255, 255, 255, 0.1);
-                color: var(--brand-volt);
-                padding: 2px 6px;
-                border-radius: 4px;
-                font-size: 0.6rem;
-                margin-left: 8px;
-                border: 1px solid rgba(204, 255, 0, 0.2);
-            }
-
-            @keyframes neon-pulse {
-                from {
-                    text-shadow: 0 0 5px #fff, 0 0 10px var(--brand-volt), 0 0 20px var(--brand-volt);
-                }
-
-                to {
-                    text-shadow: 0 0 2px #fff, 0 0 5px #00f2ff, 0 0 10px #00f2ff;
-                }
-            }
-
-            @keyframes scroll-ticker {
-                0% {
-                    transform: translateX(0);
-                }
-
-                100% {
-                    transform: translateX(-50%);
-                }
-            }
-
-            /* Billboard Fix */
-            .ticker-content {
-                display: flex;
-                width: max-content !important;
-                animation: scroll-ticker 120s linear infinite;
-                /* Much slower for readability */
-            }
-
-            .ticker-results {
-                display: flex;
-                align-items: center;
-            }
-
-            .live-broadcast-indicator span {
-                color: #ff3b30;
-                /* Red live dot */
-            }
+            padding: 10px 20px;
+            border-radius: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
     </style>
 
     <!-- Firebase SDKs -->

@@ -260,6 +260,58 @@ body {
     background-size: 100% 100%, 50px 50px, 50px 50px;
 }
 
+/* --- TICKER ELITE CATEGORY COLORS --- */
+.ticker-card.ticker-cat-4a-femenina .tag-4a-femenina {
+    background-color: var(--cat-4fem) !important;
+    color: white !important;
+}
+
+.ticker-card.ticker-cat-4a-mixta .tag-4a-mixta {
+    background-color: var(--cat-4mix) !important;
+    color: black !important;
+}
+
+.ticker-card.ticker-cat-4a-masculina .tag-4a-masculina {
+    background-color: var(--cat-4masc) !important;
+    color: black !important;
+}
+
+.ticker-card.ticker-cat-3a-mixta .tag-3a-mixta {
+    background-color: var(--cat-3mix) !important;
+    color: black !important;
+}
+
+.ticker-card.ticker-cat-3a-masculina .tag-3a-masculina {
+    background-color: var(--cat-3masc) !important;
+    color: white !important;
+}
+
+/* Glowing borders on hover for Ticker Cards */
+.ticker-card.ticker-cat-4a-femenina:hover {
+    border-color: var(--cat-4fem);
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+}
+
+.ticker-card.ticker-cat-4a-mixta:hover {
+    border-color: var(--cat-4mix);
+    box-shadow: 0 0 15px rgba(255, 234, 0, 0.3);
+}
+
+.ticker-card.ticker-cat-4a-masculina:hover {
+    border-color: var(--cat-4masc);
+    box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+}
+
+.ticker-card.ticker-cat-3a-mixta:hover {
+    border-color: var(--cat-3mix);
+    box-shadow: 0 0 15px rgba(0, 255, 64, 0.3);
+}
+
+.ticker-card.ticker-cat-3a-masculina:hover {
+    border-color: var(--cat-3masc);
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+}
+
 /* Animations */
 @keyframes aurora-drift {
     0% {
