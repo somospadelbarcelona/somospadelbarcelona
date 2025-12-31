@@ -883,7 +883,11 @@ function renderLiveFeed() {
 
 function getStandings(category, group) {
     window.getStandings = getStandings; // Exponer para Chatbot
-    const matches = tournamentData.matches.filter(m => m.category === category && m.group === group);
+    const matches = tournamentData.matches.filter(m =>
+        m.category === category &&
+        m.group === group &&
+        (!m.stage || m.stage === 'group')
+    );
     const stats = {};
 
     matches.forEach(m => {
