@@ -25,7 +25,10 @@ function calculateEloRatings(teamStats, K = 32) {
 
     // Procesar partidos en orden cronológico
     teamStats.forEach(team => {
-        team.matches.forEach(match => {
+        // Sort matches by time (rough chronological order if available)
+        const sortedMatches = [...team.matches].sort((a, b) => (a.time || '').localeCompare(b.time || ''));
+
+        sortedMatches.forEach((match, idx) => {
             const teamRating = ratings[team.team] || INITIAL_RATING;
             const oppRating = ratings[match.opponent] || INITIAL_RATING;
 
@@ -39,7 +42,10 @@ function calculateEloRatings(teamStats, K = 32) {
 
             // Factor de ajuste basado en diferencia de juegos
             const gameDiff = Math.abs(match.scoreFor - match.scoreAgainst);
-            const multiplier = 1 + (gameDiff * 0.1); // Bonus por victorias amplias
+
+            // Momentum: matches more recent in the sequence have higher weight
+            const momentumFactor = 1 + (idx / sortedMatches.length * 0.5);
+            const multiplier = momentumFactor * (1 + (gameDiff * 0.1));
 
             // Actualizar rating
             ratings[team.team] += K * multiplier * (actualScore - expectedScore);
@@ -60,8 +66,13 @@ function predictMatchOutcome(teamA, teamB, eloRatings) {
     const ratingA = eloRatings[teamA] || 1500;
     const ratingB = eloRatings[teamB] || 1500;
 
-    // Probabilidad de victoria para equipo A
-    const probA = 1 / (1 + Math.pow(10, (ratingB - ratingA) / 400));
+    // Probabilidad de victoria para equipo A (Logit curve)
+    let probA = 1 / (1 + Math.pow(10, (ratingB - ratingA) / 400));
+
+    // Humanize: Add a tiny organic jitter (+/- 1.5%) so it doesn't look static
+    const jitter = (Math.random() * 0.03) - 0.015;
+    probA = Math.max(0.05, Math.min(0.95, probA + jitter));
+
     const probB = 1 - probA;
 
     // Calcular confianza basada en diferencia de rating
@@ -69,9 +80,9 @@ function predictMatchOutcome(teamA, teamB, eloRatings) {
     const confidence = Math.min(ratingDiff / 400, 1); // 0-1
 
     // Predicción de marcador estimado
-    const baseGames = 5; // Promedio de juegos por partido
-    const expectedScoreA = Math.round(baseGames * probA);
-    const expectedScoreB = Math.round(baseGames * probB);
+    const baseGames = 5.5; // Slightly bumped for SV feel
+    const expectedScoreA = Math.max(1, Math.round(baseGames * probA * 1.2));
+    const expectedScoreB = Math.max(1, Math.round(baseGames * probB * 1.2));
 
     return {
         teamA: {
@@ -87,7 +98,8 @@ function predictMatchOutcome(teamA, teamB, eloRatings) {
             expectedScore: expectedScoreB
         },
         confidence: (confidence * 100).toFixed(1),
-        favorite: probA > probB ? teamA : teamB
+        favorite: probA > probB ? teamA : teamB,
+        logic: probA > 0.6 ? 'Aggressive Offense' : (probA < 0.4 ? 'Defensive Stance' : 'Balanced Matchup')
     };
 }
 

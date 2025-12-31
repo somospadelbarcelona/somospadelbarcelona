@@ -491,21 +491,42 @@ function renderPredictionsPanel(teamStats) {
 
         container.innerHTML = topByElo.map(item => {
             const stats = teamStats.find(t => t.team === item.team);
+            const patterns = stats ? detectPerformancePatterns(stats) : null;
+
             const probability = ((item.rating - 1200) / 800 * 100).toFixed(1); // Normalize to %
             const normalizedProb = Math.max(0, Math.min(100, probability));
 
+            // Trend Icon
+            let trendHtml = '';
+            if (patterns) {
+                if (patterns.streakType === 'winning' && patterns.streakLength >= 2) {
+                    trendHtml = `<span class="trend-badge hot" title="Racha de victorias: ${patterns.streakLength}"><i class="fas fa-fire"></i> HOT</span>`;
+                } else if (patterns.streakType === 'losing' && patterns.streakLength >= 2) {
+                    trendHtml = `<span class="trend-badge cold" title="Racha de derrotas: ${patterns.streakLength}"><i class="fas fa-snowflake"></i> COLD</span>`;
+                }
+            }
+
             return `
-            <div class="prediction-item">
+            <div class="prediction-item elite-oracle-card">
                 <div class="prediction-team">
-                    <span class="prediction-team-name">${item.team}</span>
+                    <span class="prediction-team-name">${item.team} ${trendHtml}</span>
                     <span class="prediction-probability">${normalizedProb}%</span>
                 </div>
                 <div class="prediction-bar">
                     <div class="prediction-bar-fill" style="width: ${normalizedProb}%"></div>
                 </div>
-                <div class="prediction-confidence">
-                    Rating Elo: ${item.rating.toFixed(0)} | 
-                    ${stats ? `${stats.won}V-${stats.lost}D` : 'N/A'}
+                <div class="prediction-meta">
+                    <div class="meta-stat">
+                        <i class="fas fa-chart-line"></i> Rating Elo: <b>${item.rating.toFixed(0)}</b>
+                    </div>
+                    <div class="meta-stat">
+                        <i class="fas fa-bullseye"></i> Consistencia: <b>${patterns ? patterns.consistency : 'N/A'}%</b>
+                    </div>
+                    <div class="meta-stat">
+                        <span class="win-loss-count ${stats && stats.won > stats.lost ? 'positive' : ''}">
+                            ${stats ? `${stats.won}V - ${stats.lost}D` : '0V - 0D'}
+                        </span>
+                    </div>
                 </div>
             </div>
         `;

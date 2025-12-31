@@ -97,25 +97,29 @@ function initLiveUsersGadget() {
 
     // Volatile Update Loop (Every 2-4 seconds)
     const updateLoop = () => {
-        // High volatility: change by -3 to +5
-        const delta = Math.floor(Math.random() * 9) - 3;
-        activeUsers = Math.max(32, Math.min(85, activeUsers + delta));
+        // High volatility: change by -3 to +8 for more "spiky" SV feel
+        const delta = Math.floor(Math.random() * 12) - 3;
+        activeUsers = Math.max(32, Math.min(125, activeUsers + delta));
 
         // Render Count
         el.textContent = activeUsers;
 
-        // Randomly show "New User" toast (30% chance)
-        if (Math.random() > 0.7 && feed) {
+        // Peak Time simulation: More toasts during simulated busy hours
+        const hour = new Date().getHours();
+        const toastChance = (hour >= 18 || hour <= 21) ? 0.6 : 0.3;
+
+        // Randomly show "New User" toast
+        if (Math.random() < toastChance && feed) {
             const loc = locations[Math.floor(Math.random() * locations.length)];
             feed.innerHTML = `
                 <div class="location-toast">
-                    <i class="fas fa-map-marker-alt"></i> Entra desde <b>${loc}</b>
+                    <i class="fas fa-satellite-dish"></i> <b>NUEVA VISITA:</b> ${loc}
                 </div>
             `;
         }
 
         // Variable timing for organic feel
-        setTimeout(updateLoop, Math.random() * 2000 + 2000);
+        setTimeout(updateLoop, Math.random() * 1500 + 1500);
     };
 
     updateLoop();
@@ -125,27 +129,27 @@ document.addEventListener('DOMContentLoaded', initLiveUsersGadget);
 
 const RAW_TEAMS = {
     "4ª Femenina": {
-        "A": ["ANDREA BARAJA", "YOANA MARTINEZ", "ANDREA VIVANCOS", "BERTA CAÑAS", "GEMMA SAVEEDRA", "MAYTE VEGA", "SANDRA RIERA", "YOLANDA SANZ"],
-        "B": ["ANA GASENI", "ANNA POLO", "CRISTINA MATAMALA", "OLGA FERRER", "JOANA GARCIA", "MARTA BASSONS", "GREIS CABALLERO", "ESTER RODRIGUEZ"],
-        "C": ["LAURA GARCIA", "NOELIA ORNAQUE", "JUDIT PINAD", "JUDITH ESQUERRE", "MARIA LLUISA BENLLOCH", "MARTA BAIJET", "EMMA BAIJET", "MIREIA PELIRGROS"]
+        "A": ["Yoana Martinez", "Andrea Baraja", "Andrea Vivancos", "Berta Cañas", "Gemma Saveedra", "Mayte Vega", "Sandra Riera", "Yolanda Sanz"],
+        "B": ["Ana Gaseni", "Anna Polo", "Cristina Matamala", "Olga Ferrer", "Marta Bassons", "Joana Garcia", "Greis Caballero", "Ester Rodriguez"],
+        "C": ["Laura Garcia", "Noelia Ornaque", "Judit Pinad", "Judith Esquerre", "Maria Lluisa Benlloch", "Marta Baijet", "Emma Baijet", "Mireia Pelirgros"]
     },
     "3ª Masculina": {
-        "A": ["GERARDO JAENES", "PAU MENA", "ANGEL MILLAN", "ALBERT ESTRELLA", "SERGIO SERRANO", "FERNANDO GOMEZ", "PABLO KELLERMAN", "VICTOR ILIANA"],
-        "B": ["FALTA PAREJA 1", "FALTA PAREJA 2", "ELOY ARRABAL", "NESS", "TONI PALAU", "CARLOS ASMADT", "ALBERT ESTRELLA PADRE", "JOEL HARO"]
+        "A": ["Gerardo Jaenes", "Pau Mena", "Angel Millan", "Albert Estrella", "Sergio Serrano", "Fernando Gomez", "Pablo Kellerman", "Victor Iliana"],
+        "B": ["Falta Pareja 1", "Falta Pareja 2", "Eloy Arrabal", "Ness", "Toni Palau", "Carlos Asmadt", "Albert Estrella Padre", "Joel Haro"]
     },
     "4ª Masculina": {
-        "A": ["CRISTIAN LASHERAS", "MANU SANCHEZ", "BRYAN DAVILA", "XAVI PEREA", "ADRIA BOZA", "MARC PIJUAN", "SERGIO ALBERT", "JOAN BERNARND"],
-        "B": ["FERNANDO RODRGUEZ", "JUAN M LOPEZ", "JAVIER HITA", "OSCAR COSCOLIN", "VLADIMIR STARCIUC", "BERNAT PECHAROMAN", "DANIEL ASTASIO", "MARC VALLDOSERA"]
+        "A": ["Cristian Lasheras", "Manu Sanchez", "Bryan Davila", "Xavi Perea", "Adria Boza", "Marc Pijuan", "Sergio Albert", "Joan Bernarnd"],
+        "B": ["Fernando Rodrguez", "Juan M Lopez", "Javier Hita", "Oscar Coscolin", "Vladimir Starciuc", "Bernat Pecharoman", "Daniel Astasio", "Marc Valldosera"]
     },
     "3ª Mixta": {
-        "A": ["ZIZI", "MANUEL GAMERO", "JUANJO JIMENEZ", "MARIONA REYES", "DAVID NAVEA", "AINHOA NAVEA", "RONNY BENALCAZAR", "CARLA SOTO"],
-        "B": ["MARIO SANZ", "OLGA PLYPCHUK", "LOLA CARO", "RAMON MEJIAS", "MIKY MUÑOZ", "MONICA", "CRISTINA GARCIA", "JORDI DIAZ"]
+        "A": ["Zizi", "Manuel Gamero", "Juanjo Jimenez", "Mariona Reyes", "David Navea", "Ainhoa Navea", "Ronny Benalcazar", "Carla Soto"],
+        "B": ["Mario Sanz", "Olga Plypchuk", "Lola Caro", "Ramon Mejias", "Miky Muñoz", "Monica", "Cristina Garcia", "Jordi Diaz"]
     },
     "4ª Mixta": {
-        "A": ["MONICA", "JOAQUIM SALVAT", "JOSE LIUS BERGA", "PAULA ALVES", "LUIS PINO", "RAQUEL PEREZ", "FERNANDO GRACIA", "PAZ LORENZO"],
-        "B": ["KEVIN MANCILLA", "LORENA ARENAS", "SONIA LOPEZ", "TONI MILLAN", "DAVID ASENSIO", "ANAIS GREBOT", "ABEL FRANCESC", "EDITH ALVAREZ"],
-        "C": ["JUAN MANUEL LEON", "RAQUEL FERNANDEZ", "CARLOTA CALABUIG", "JORDI SEUBA", "ANABEL DELGADO", "ENRIQUE FONTOBA", "CARLOS CALASANZ", "CRISTINA VIDAL"],
-        "D": ["CORAL NOVA", "ISMAEL CASARES", "NATALIA GUASH", "JAVIER FRACUA", "ALEX CUADRA", "PILI JORQUES", "MARTA MURUGARREN", "JORGE RUEDA"]
+        "A": ["Monica", "Joaquim Salvat", "Jose Lius Berga", "Paula Alves", "Luis Pino", "Raquel Perez", "Fernando Gracia", "Paz Lorenzo"],
+        "B": ["Kevin Mancilla", "Lorena Arenas", "Sonia Lopez", "Toni Millan", "David Asensio", "Anais Grebot", "Abel Francesc", "Edith Alvarez"],
+        "C": ["Juan Manuel Leon", "Raquel Fernandez", "Carlota Calabuig", "Jordi Seuba", "Anabel Delgado", "Enrique Fontoba", "Carlos Calasanz", "Cristina Vidal"],
+        "D": ["Coral Nova", "Ismael Casares", "Natalia Guash", "Javier Fracua", "Alex Cuadra", "Pili Jorques", "Marta Murugarren", "Jorge Rueda"]
     }
 };
 
@@ -433,7 +437,7 @@ function validateAndRepairData() {
             tournamentData.categories = [...new Set(tournamentData.categories)];
         }
 
-        // Ensure all matches have necessary fields
+        // Ensure all matches have necessary fields and perform Title Case Migration
         tournamentData.matches.forEach(m => {
             if (!m.id) m.id = Math.floor(Math.random() * 100000);
             if (!m.status) m.status = 'pending';
@@ -441,6 +445,30 @@ function validateAndRepairData() {
             if (m.scoreB === undefined) m.scoreB = null;
             if (!m.time) m.time = 'TBD';
             if (!m.court) m.court = 'Pista ?';
+
+            // --- ON-THE-FLY MIGRATION: 4ª FEMENINA SWAP & TITLE CASE ---
+            if (m.category === '4ª Femenina') {
+                const normA = (m.teamA || "").toUpperCase();
+                const normB = (m.teamB || "").toUpperCase();
+
+                // Swap Logic (Team A)
+                if (normA.includes('ANDREA BARAJA') && normA.includes('YOANA MARTINEZ')) {
+                    m.teamA = "Yoana Martinez / Andrea Baraja"; m.group = 'A';
+                } else if (normA.includes('JOANA GARCIA') && normA.includes('MARTA BASSONS')) {
+                    m.teamA = "Marta Bassons / Joana Garcia"; m.group = 'B';
+                }
+                // Swap Logic (Team B)
+                if (normB.includes('ANDREA BARAJA') && normB.includes('YOANA MARTINEZ')) {
+                    m.teamB = "Yoana Martinez / Andrea Baraja"; m.group = 'A';
+                } else if (normB.includes('JOANA GARCIA') && normB.includes('MARTA BASSONS')) {
+                    m.teamB = "Marta Bassons / Joana Garcia"; m.group = 'B';
+                }
+            }
+
+            // Universal Title Case (for visual clean up)
+            const toTitleCase = (str) => str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+            if (m.teamA && m.teamA === m.teamA.toUpperCase()) m.teamA = toTitleCase(m.teamA);
+            if (m.teamB && m.teamB === m.teamB.toUpperCase()) m.teamB = toTitleCase(m.teamB);
         });
 
         // Ensure playoffs exist
@@ -1063,6 +1091,7 @@ function init() {
 }
 
 function updateUI() {
+    if (typeof validateAndRepairData === 'function') validateAndRepairData();
     if (!tournamentData) return;
 
     // Init Defaults if missing (safety)
@@ -1553,12 +1582,12 @@ function generateAIPrediction(match) {
     const colorA = probA > 52 ? 'var(--brand-volt)' : (probA < 48 ? '#ef4444' : '#555');
 
     // Add a pulsing effect to the brain icon if it's a "Hot Match"
-    const isHotMatch = Math.abs(probA - 50) < 5;
+    const isHotMatch = Math.abs(probA - 50) < 5 || match.status === 'live';
     const brainClass = isHotMatch ? 'fa-brain pulsing-brain' : 'fa-brain';
 
     return `
-        <div class="ai-pred-bar-container" title="Probabilidad IA: ${probA.toFixed(1)}% vs ${(100 - probA).toFixed(1)}%">
-            <div class="ai-prob-fill" style="width: ${probA}%; background: ${colorA};"></div>
+        <div class="ai-pred-bar-container" title="Proprietary AI Prediction: ${probA.toFixed(1)}% Confidence in ${match.teamA}">
+            <div class="ai-prob-fill" style="width: ${probA}%; background: ${colorA}; color: ${colorA}"></div>
             <div class="ai-prob-icon"><i class="fas ${brainClass}"></i></div>
         </div>
     `;
@@ -2201,6 +2230,10 @@ function startAutoRefresh() {
         }
     }, 2000); // Check every 2 seconds
 }
+
+
+// Ensure init is exported
+window.init = init;
 
 // Helper global for init (if standalone)
 if (typeof document !== 'undefined') {
